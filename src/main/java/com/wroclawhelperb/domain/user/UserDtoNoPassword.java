@@ -1,6 +1,6 @@
 package com.wroclawhelperb.domain.user;
 
-import com.wroclawhelperb.domain.GPSLocation;
+import com.wroclawhelperb.domain.location.GPSLocation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

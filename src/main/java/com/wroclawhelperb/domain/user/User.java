@@ -1,21 +1,20 @@
 package com.wroclawhelperb.domain.user;
 
-import com.wroclawhelperb.domain.GPSLocation;
 import com.wroclawhelperb.domain.Locable;
+import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.encryptor.Encryptor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity(name = "Users")
 @Table(name = "users")
-public class User {
+public class User implements Locable {
 
     @Id
     @GeneratedValue
@@ -50,19 +49,4 @@ public class User {
         this.email = email;
         this.location = location;
     }
-
-    public Locable findNearest(List<Locable> locableList) {
-        if (locableList != null && locableList.size() > 0) {
-            Locable locable = locableList.get(0);
-            for (Locable l : locableList) {
-                if (this.getLocation().getDistance(l.getLocation()) < this.getLocation().getDistance(locable.getLocation())) {
-                    locable = l;
-                }
-            }
-            return locable;
-        }
-        //throw some Exception?
-        return null;
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.wroclawhelperb.domain;
 
+import com.wroclawhelperb.domain.location.GPSLocation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

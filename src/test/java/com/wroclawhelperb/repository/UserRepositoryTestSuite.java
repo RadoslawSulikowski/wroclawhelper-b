@@ -1,6 +1,6 @@
 package com.wroclawhelperb.repository;
 
-import com.wroclawhelperb.domain.GPSLocation;
+import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

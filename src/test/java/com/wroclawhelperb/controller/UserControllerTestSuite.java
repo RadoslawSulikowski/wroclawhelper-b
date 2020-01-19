@@ -1,7 +1,7 @@
 package com.wroclawhelperb.controller;
 
 import com.google.gson.Gson;
-import com.wroclawhelperb.domain.GPSLocation;
+import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.UserDtoFull;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
@@ -41,7 +41,7 @@ public class UserControllerTestSuite {
         when(userService.getAllUsers()).thenReturn(new ArrayList<>());
 
         //When & Then
-        mockMvc.perform(get("/v1/users").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -71,7 +71,7 @@ public class UserControllerTestSuite {
         when(userService.getAllUsers()).thenReturn(users);
 
         //When & Then
-        mockMvc.perform(get("/v1/users").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
@@ -90,7 +90,7 @@ public class UserControllerTestSuite {
         when(userService.getUser(anyLong())).thenThrow(UserNotFoundException.class);
 
         //When & Then
-        mockMvc.perform(get("/v1/users/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(404))
                 .andExpect(status().reason("No user with given id"));
     }
@@ -110,7 +110,7 @@ public class UserControllerTestSuite {
         when(userService.getUser(anyLong())).thenReturn(user);
 
         //When & Then
-        mockMvc.perform(get("/v1/users/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstName", is("fName")))
@@ -138,7 +138,7 @@ public class UserControllerTestSuite {
         String jsonContent = gson.toJson(userDto);
 
         //When & Then
-        mockMvc.perform(post("/v1/users")
+        mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
@@ -155,7 +155,7 @@ public class UserControllerTestSuite {
         String jsonContent = gson.toJson(userDto);
 
         //When & Then
-        mockMvc.perform(put("/v1/users").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().is(404))
@@ -187,7 +187,7 @@ public class UserControllerTestSuite {
         String jsonContent = gson.toJson(userDto);
 
         //When & Then
-        mockMvc.perform(put("/v1/users")
+        mockMvc.perform(put("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
@@ -209,7 +209,7 @@ public class UserControllerTestSuite {
         doThrow(UserNotFoundException.class).when(userService).deleteUser(anyLong());
 
         //When & Then
-        mockMvc.perform(delete("/v1/users/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/users/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(404))
                 .andExpect(status().reason("No user with given id"));
     }
@@ -220,7 +220,7 @@ public class UserControllerTestSuite {
         doNothing().when(userService).deleteUser(anyLong());
 
         //When & Then
-        mockMvc.perform(delete("/v1/users/1")
+        mockMvc.perform(delete("/users/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(204))
                 .andExpect(status().reason("User successful deleted"));

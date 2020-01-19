@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -20,28 +20,28 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/users")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED, reason = "User successful added")
     public Long addUser(@RequestBody UserDtoNoId userDto) {
         return userService.addUser(userDto);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/users")
+    @GetMapping
     public List<UserDtoNoPassword> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}")
+    @GetMapping(value = "/{userId}")
     public UserDtoNoPassword getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
         return userService.getUser(id);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/users")
+    @PutMapping
     public UserDtoNoPassword updateUser(@RequestBody UserDtoFull userDto) throws UserNotFoundException {
         return userService.updateUser(userDto);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/users/{userId}")
+    @DeleteMapping(value = "/{userId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "User successful deleted")
     public void deleteUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
         userService.deleteUser(id);
