@@ -7,6 +7,7 @@ import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.weather.Weather;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import com.wroclawhelperb.exception.UserNotFoundException;
+import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import com.wroclawhelperb.mapper.CSVMapper;
 import com.wroclawhelperb.mapper.WeatherMapper;
 import com.wroclawhelperb.repository.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class WeatherService {
@@ -31,8 +33,19 @@ public class WeatherService {
     }
 
 
+    public List<WeatherDtoNoId> getWeatherOnAllStations() throws IOException {
+        return CSVMapper.mapToWeatherList(sourceUrl);
+    }
+
+    public WeatherDtoNoId getWeatherOnStation(String stationId) throws IOException, WeatherStationNotFoundException {
+        return CSVMapper.mapToWeatherList(sourceUrl).stream()
+                .filter(w -> w.getWeatherStationName().equals(stationId.toUpperCase()))
+                .findFirst()
+                .orElseThrow(WeatherStationNotFoundException::new);
+    }
+
     public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(GPSLocation location) throws IOException {
-        return weatherMapper.mapToWeatherDtoNoId(
+        return weatherMapper.mapToWeatherDto(
                 (Weather) location.findNearest(weatherMapper.mapToWeatherList(CSVMapper.mapToWeatherList(sourceUrl)))
         );
     }

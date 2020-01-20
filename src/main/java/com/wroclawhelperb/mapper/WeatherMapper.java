@@ -19,7 +19,7 @@ public class WeatherMapper {
         this.weatherStationRepository = weatherStationRepository;
     }
 
-    public WeatherDtoNoId mapToWeatherDtoNoId(Weather weather) {
+    public WeatherDtoNoId mapToWeatherDto(Weather weather) {
         return new WeatherDtoNoId(
                 weather.getSourceId(),
                 weather.getMeasuringTime(),
