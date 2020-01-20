@@ -2,11 +2,9 @@ package com.wroclawhelperb.controller;
 
 import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
+import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.service.WeatherService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -20,8 +18,15 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping
-    public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(@RequestBody GPSLocationDtoNoIdNoType location) throws IOException {
+    @GetMapping(value = "/location")
+    public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(@RequestBody GPSLocationDtoNoIdNoType location)
+            throws IOException {
         return weatherService.getWeatherOnNearestStationFromGivenLocation(location);
+    }
+
+    @GetMapping("/user/{id}")
+    public WeatherDtoNoId getWeatherOnNearestStationFromUser(@PathVariable Long userId)
+            throws UserNotFoundException, IOException {
+        return weatherService.getWeatherOnNearestStationFromUser(userId);
     }
 }

@@ -9,12 +9,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@NamedNativeQuery(
-        name = "WeatherStation.fetchWeatherStationByName",
-        query = "SELECT * FROM weather_station WHERE name LIKE :sName",
-        resultClass = WeatherStation.class
-)
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

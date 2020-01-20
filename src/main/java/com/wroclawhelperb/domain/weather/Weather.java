@@ -45,7 +45,7 @@ public class Weather implements Locable {
     @Column(name = "precipitationType")
     private String precipitationType;
 
-    @ManyToOne(optional = false, targetEntity = WeatherStation.class)
+    @ManyToOne(optional = false, targetEntity = WeatherStation.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "weatherStationName", referencedColumnName = "shortName")
     private WeatherStation weatherStation;
 

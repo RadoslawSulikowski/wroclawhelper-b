@@ -56,7 +56,7 @@ public class GPSLocation {
 
 
     public Locable findNearest(List<? extends Locable> locableList) {
-        if (locableList != null && locableList.size() > 0) {
+        if (locableList != null && !locableList.isEmpty()) {
             Locable locable = locableList.get(0);
             for (Locable l : locableList) {
                 if (this.getDistance(l.getLocation()) < this.getDistance(locable.getLocation())) {
