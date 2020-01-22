@@ -1,3 +1,6 @@
+//By BillyKorando
+//https://medium.com/@BillyKorando/how-to-test-logging-in-java-fc36c6965bd9
+//https://medium.com/@BillyKorando/how-to-test-logging-in-java-part-two-parallel-boogaloo-28d563c15a3d
 package com.wroclawhelperb.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;

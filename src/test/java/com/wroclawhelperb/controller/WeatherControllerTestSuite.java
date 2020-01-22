@@ -1,6 +1,10 @@
 package com.wroclawhelperb.controller;
 
+import com.google.gson.Gson;
+import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
+import com.wroclawhelperb.exception.UserNotFoundException;
+import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import com.wroclawhelperb.service.WeatherService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import java.util.List;
 import static com.wroclawhelperb.domain.weather.WeatherStation.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,7 +61,8 @@ public class WeatherControllerTestSuite {
         when(weatherService.getWeatherOnAllStations()).thenReturn(weatherList);
 
         //When & Then
-        mockMvc.perform(get("/weather").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/weather")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].sourceId", is(1)))
@@ -70,5 +76,109 @@ public class WeatherControllerTestSuite {
                 .andExpect(jsonPath("$[2].weatherStationName", is(LOTNICZA)));
     }
 
+    @Test
+    public void shouldHandleWeatherStationNotFoundException() throws Exception {
+        //Given
+        when(weatherService.getWeatherOnStation(anyString()))
+                .thenThrow(WeatherStationNotFoundException.class);
 
+        //When & Then
+        mockMvc.perform(get("/weather/STATION_NAME")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(404))
+                .andExpect(status().reason("No station with given id"));
+    }
+
+    @Test
+    public void shouldFetchWeatherOnGivenStation() throws Exception {
+        //Given
+        String givenStationName = "Given_Station_Name";
+        WeatherDtoNoId weather = new WeatherDtoNoId(
+                1L, LocalDateTime.of(2020, 1, 20, 22, 40),
+                10.0, 180, 50, 10, 20,
+                TEST_PRECIPITATION_TYPE_1, MILENIJNY);
+        when(weatherService.getWeatherOnStation(givenStationName)).thenReturn(weather);
+
+        //When & Then
+        mockMvc.perform(get("/weather/" + givenStationName)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("sourceId", is(1)))
+                .andExpect(jsonPath("measuringTime", is("2020-01-20T22:40:00")))
+                .andExpect(jsonPath("windSpeed", is((double) 10)))
+                .andExpect(jsonPath("windDirection", is((double) 180)))
+                .andExpect(jsonPath("humidity", is((double) 50)))
+                .andExpect(jsonPath("airTemperature", is(((double) 10))))
+                .andExpect(jsonPath("groundTemperature", is(((double) 20))))
+                .andExpect(jsonPath("precipitationType", is(TEST_PRECIPITATION_TYPE_1)))
+                .andExpect(jsonPath("weatherStationName", is(MILENIJNY)));
+    }
+
+    @Test
+    public void shouldFetchWeatherOnNearestStationFromGivenLocation() throws Exception {
+        //Given
+        WeatherDtoNoId weather = new WeatherDtoNoId(
+                1L, LocalDateTime.of(2020, 1, 20, 22, 40),
+                10.0, 180, 50, 10, 20,
+                TEST_PRECIPITATION_TYPE_1, MILENIJNY);
+        when(weatherService.getWeatherOnNearestStationFromGivenLocation(any(GPSLocationDtoNoIdNoType.class)))
+                .thenReturn(weather);
+        GPSLocationDtoNoIdNoType givenLocation = new GPSLocationDtoNoIdNoType(1.0, 1.0);
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(givenLocation);
+
+        //When & Then
+        mockMvc.perform(get("/weather/location")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("sourceId", is(1)))
+                .andExpect(jsonPath("measuringTime", is("2020-01-20T22:40:00")))
+                .andExpect(jsonPath("windSpeed", is((double) 10)))
+                .andExpect(jsonPath("windDirection", is((double) 180)))
+                .andExpect(jsonPath("humidity", is((double) 50)))
+                .andExpect(jsonPath("airTemperature", is(((double) 10))))
+                .andExpect(jsonPath("groundTemperature", is(((double) 20))))
+                .andExpect(jsonPath("precipitationType", is(TEST_PRECIPITATION_TYPE_1)))
+                .andExpect(jsonPath("weatherStationName", is(MILENIJNY)));
+    }
+
+    @Test
+    public void shouldHandleUserNotFoundException() throws Exception {
+        //Given
+        when(weatherService.getWeatherOnNearestStationFromUser(anyLong()))
+                .thenThrow(UserNotFoundException.class);
+
+        //When & Then
+        mockMvc.perform(get("/weather/user/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(404))
+                .andExpect(status().reason("No user with given id"));
+    }
+
+    @Test
+    public void shouldFetchWeatherOnNearestStationFromUser() throws Exception {
+        //Given
+        WeatherDtoNoId weather = new WeatherDtoNoId(
+                1L, LocalDateTime.of(2020, 1, 20, 22, 40),
+                10.0, 180, 50, 10, 20,
+                TEST_PRECIPITATION_TYPE_1, MILENIJNY);
+        when(weatherService.getWeatherOnNearestStationFromUser(anyLong()))
+                .thenReturn(weather);
+
+        //When & Then
+        mockMvc.perform(get("/weather/user/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("sourceId", is(1)))
+                .andExpect(jsonPath("measuringTime", is("2020-01-20T22:40:00")))
+                .andExpect(jsonPath("windSpeed", is((double) 10)))
+                .andExpect(jsonPath("windDirection", is((double) 180)))
+                .andExpect(jsonPath("humidity", is((double) 50)))
+                .andExpect(jsonPath("airTemperature", is(((double) 10))))
+                .andExpect(jsonPath("groundTemperature", is(((double) 20))))
+                .andExpect(jsonPath("precipitationType", is(TEST_PRECIPITATION_TYPE_1)))
+                .andExpect(jsonPath("weatherStationName", is(MILENIJNY)));
+    }
 }

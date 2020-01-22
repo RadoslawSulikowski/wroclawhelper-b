@@ -1,6 +1,5 @@
 package com.wroclawhelperb.mapper;
 
-import ch.qos.logback.classic.Level;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import com.wroclawhelperb.logging.StaticAppender;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,14 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.wroclawhelperb.mapper.CSVMapper.mapToWeatherList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CSVMapperTestSuite {
 
+    @BeforeEach
+    public void clearLoggingStatements() {
+        StaticAppender.clearEvents();
+    }
+
     @Test
     public void shouldLogErrorMalformedURLExceptionAndReturnEmptyArray() {
-        StaticAppender.clearEvents();
         //Given
         String sUrl = "wrong string url address";
 
@@ -29,13 +33,12 @@ public class CSVMapperTestSuite {
         //Then
         assertTrue(list instanceof ArrayList);
         assertEquals(0, list.size());
-        assertEquals(StaticAppender.getEvents().get(0).getLevel(), Level.ERROR);
-        assertEquals("Can not creat URL from given String", StaticAppender.getEvents().get(0).getMessage());
+        assertThat(StaticAppender.getEvents()).extracting("message")
+                .containsOnly("Can not creat URL from given String");
     }
 
     @Test
     public void shouldLogErrorIOExceptionAndReturnEmptyArray() throws MalformedURLException {
-        StaticAppender.clearEvents();
         //Given
         URL url = new URL("https://www.wroclaw.pl/open-data/datastore/dump/9d5b2336");
 
@@ -45,7 +48,7 @@ public class CSVMapperTestSuite {
         //Then
         assertTrue(list instanceof ArrayList);
         assertEquals(0, list.size());
-        assertEquals(StaticAppender.getEvents().get(0).getLevel(), Level.ERROR);
-        assertEquals("Can not obtain data from external Weather API", StaticAppender.getEvents().get(0).getMessage());
+        assertThat(StaticAppender.getEvents()).extracting("message")
+                .containsOnly("Can not obtain data from external Weather API");
     }
 }
