@@ -21,20 +21,18 @@ public class WeatherController {
     }
 
     @GetMapping()
-    public List<WeatherDtoNoId> getWeatherOnAllStations()
-            throws IOException {
+    public List<WeatherDtoNoId> getWeatherOnAllStations() {
         return weatherService.getWeatherOnAllStations();
     }
 
     @GetMapping(value = "/{stationId}")
     public WeatherDtoNoId getWeatherOnStation(@PathVariable String stationId)
-            throws IOException, WeatherStationNotFoundException {
+            throws WeatherStationNotFoundException {
         return weatherService.getWeatherOnStation(stationId);
     }
 
     @GetMapping(value = "/location")
-    public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(@RequestBody GPSLocationDtoNoIdNoType location)
-            throws IOException {
+    public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(@RequestBody GPSLocationDtoNoIdNoType location) {
         return weatherService.getWeatherOnNearestStationFromGivenLocation(location);
     }
 
