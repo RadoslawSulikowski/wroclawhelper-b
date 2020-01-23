@@ -1,5 +1,6 @@
 package com.wroclawhelperb.mapper;
 
+import com.wroclawhelperb.domain.bike.station.BikeStationDto;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import com.wroclawhelperb.logging.StaticAppender;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.wroclawhelperb.mapper.CSVMapper.mapToBikeStationList;
 import static com.wroclawhelperb.mapper.CSVMapper.mapToWeatherList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,5 +52,14 @@ public class CSVMapperTestSuite {
         assertEquals(0, list.size());
         assertThat(StaticAppender.getEvents()).extracting("message")
                 .containsOnly("Can not obtain data from external Weather API");
+    }
+
+    @Test
+    public void shouldFetchBikeStationList() throws MalformedURLException {
+        URL url = new URL("https://www.wroclaw.pl/open-data/datastore/dump/42eea6ec-43c3-4d13-aa77-a93394d6165a");
+
+        List<BikeStationDto> bikeStationList = mapToBikeStationList(url);
+
+        bikeStationList.forEach(System.out::println);
     }
 }

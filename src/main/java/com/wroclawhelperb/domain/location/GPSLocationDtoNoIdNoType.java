@@ -13,4 +13,12 @@ public class GPSLocationDtoNoIdNoType {
 
     private double latitude;
     private double longitude;
+
+    @Override
+    public String toString() {
+        return "GPSLocationDtoNoIdNoType{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }

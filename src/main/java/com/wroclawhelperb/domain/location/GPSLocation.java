@@ -21,6 +21,7 @@ public class GPSLocation {
 
     public static final String USER_FAVORITE_LOCATION = "USER_FAVORITE_LOCATION";
     public static final String WEATHER_STATION_LOCATION = "WEATHER_STATION_LOCATION";
+    public static final String BIKE_STATION_LOCATION = "BIKE_STATION_LOCATION";
 
 
     @Id
