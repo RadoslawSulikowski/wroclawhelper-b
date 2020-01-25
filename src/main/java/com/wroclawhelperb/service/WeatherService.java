@@ -36,8 +36,7 @@ public class WeatherService {
     }
 
     public WeatherDtoNoId getWeatherOnStation(String stationId) throws WeatherStationNotFoundException {
-        return CSVMapper.mapToWeatherList(sourceUrl)
-                .stream()
+        return CSVMapper.mapToWeatherList(sourceUrl).stream()
                 .filter(w -> w.getWeatherStationName().equals(stationId.toUpperCase()))
                 .findFirst()
                 .orElseThrow(WeatherStationNotFoundException::new);

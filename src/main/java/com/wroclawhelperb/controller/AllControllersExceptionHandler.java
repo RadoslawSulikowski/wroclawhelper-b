@@ -2,6 +2,7 @@ package com.wroclawhelperb.controller;
 
 
 import com.wroclawhelperb.exception.BikeStationNotFoundException;
+import com.wroclawhelperb.exception.CarNotFoundException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import org.slf4j.Logger;
@@ -37,4 +38,10 @@ public class AllControllersExceptionHandler {
         return "No such Bike Station";
     }
 
+    @ExceptionHandler(CarNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No car with given plates number")
+    public String carNotFoundExceptionHandler() {
+        LOGGER.error("No car with given plates number");
+        return "No car with given plates number";
+    }
 }

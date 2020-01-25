@@ -17,7 +17,7 @@ public class WeatherServiceTestSuite {
 
     @Test
 
-    public void testGetWeather() throws Exception {
+    public void testGetWeather() {
         //Given
         User user = new User("a", "a", "a", "a", "a",
                 new GPSLocation(51.138235, 16.973045, GPSLocation.USER_FAVORITE_LOCATION));
