@@ -1,4 +1,4 @@
-package com.wroclawhelperb.domain.bike.station;
+package com.wroclawhelperb.domain.bike;
 
 //@NoArgsConstructor
 //@AllArgsConstructor
@@ -8,13 +8,8 @@ package com.wroclawhelperb.domain.bike.station;
 //@Table(name = "BikeStation")
 public class BikeStation {
 //
-//    Long sourceId;
 //    @Id
-//    Long uniqueId;
 //    int number;
-//    int bookedBikes;
-//    int bikes;
-//    List<Integer> bikeList;
 //    GPSLocation location; //lat,lng,
 //    String name;
 

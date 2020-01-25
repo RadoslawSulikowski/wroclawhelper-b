@@ -1,6 +1,7 @@
 package com.wroclawhelperb.mapper;
 
-import com.wroclawhelperb.domain.bike.station.BikeStationDto;
+import com.wroclawhelperb.domain.bike.BikeStationDto;
+import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import org.slf4j.Logger;
@@ -33,7 +34,6 @@ public class CSVMapper {
                 String[] line = scanner.nextLine().split(",");
                 if (lineCounter > 1) {
                     weatherList.add(new WeatherDtoNoId(
-                            parseLong(line[0]),
                             LocalDateTime.parse(line[1].substring(0, 10) + "T" + line[1].substring(11, 16)),
                             parseDouble(line[2]),
                             parseDouble(line[3]),
@@ -97,13 +97,12 @@ public class CSVMapper {
                     }
 
                     bikeStationList.add(new BikeStationDto(
-                            parseLong(line0Arr[0]), //Long sourceId;
                             parseLong(line0Arr[1]), //Long uniqueId;
                             parseInt(line0Arr[2]), //int number;
                             parseInt(line0Arr[3]), //int bookedBikes;
                             parseInt(line0Arr[4]), //int bikes;
                             bikeList, //List<Integer> bikeList;
-                            new GPSLocationDtoNoIdNoType(parseDouble(line1Arr[0]), parseDouble(line1Arr[1])), //GPSLocation location; //lat,lng,
+                            new GPSLocation(parseDouble(line1Arr[0]), parseDouble(line1Arr[1])), //GPSLocation location; //lat,lng,
                             line1Arr[2] //String name;
                     ));
                 }

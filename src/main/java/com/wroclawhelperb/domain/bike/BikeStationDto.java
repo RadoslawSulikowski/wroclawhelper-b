@@ -1,6 +1,7 @@
-package com.wroclawhelperb.domain.bike.station;
+package com.wroclawhelperb.domain.bike;
 
-import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
+import com.wroclawhelperb.domain.Locable;
+import com.wroclawhelperb.domain.location.GPSLocation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,21 +13,19 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BikeStationDto {
+public class BikeStationDto implements Locable {
 
-    Long sourceId;
     Long uniqueId;
     int number;
     int bookedBikes;
     int bikes;
     List<Integer> bikeList;
-    GPSLocationDtoNoIdNoType location;
+    GPSLocation location;
     String name;
 
     @Override
     public String toString() {
         return "BikeStationDto{" +
-                "sourceId=" + sourceId +
                 ", uniqueId=" + uniqueId +
                 ", number=" + number +
                 ", bookedBikes=" + bookedBikes +

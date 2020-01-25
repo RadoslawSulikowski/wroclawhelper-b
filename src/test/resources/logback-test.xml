@@ -1,7 +1,0 @@
-<configuration>
-    <appender name="static-appender" class="com.wroclawhelperb.logging.StaticAppender" />
-
-    <root level="trace">
-        <appender-ref ref="static-appender" />
-    </root>
-</configuration>

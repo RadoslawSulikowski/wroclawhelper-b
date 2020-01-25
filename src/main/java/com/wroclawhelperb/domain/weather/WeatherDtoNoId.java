@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Getter
 public class WeatherDtoNoId {
 
-    private Long sourceId;
     private LocalDateTime measuringTime;
     private double windSpeed;
     private double windDirection;
@@ -24,7 +23,6 @@ public class WeatherDtoNoId {
     @Override
     public String toString() {
         return "WeatherDtoNoId{" +
-                "sourceId=" + sourceId +
                 ", measuringTime=" + measuringTime +
                 ", windSpeed=" + windSpeed +
                 ", windDirection=" + windDirection +

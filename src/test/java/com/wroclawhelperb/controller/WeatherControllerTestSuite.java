@@ -44,15 +44,15 @@ public class WeatherControllerTestSuite {
         //Given
         List<WeatherDtoNoId> weatherList = new ArrayList<>();
         WeatherDtoNoId weather1 = new WeatherDtoNoId(
-                1L, LocalDateTime.of(2020, 1, 20, 22, 40),
+                LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
         WeatherDtoNoId weather2 = new WeatherDtoNoId(
-                3L, LocalDateTime.of(2020, 1, 21, 2, 0),
+                LocalDateTime.of(2020, 1, 21, 2, 0),
                 0.0, 240, 90, 2, -3.5,
                 TEST_PRECIPITATION_TYPE_2, OPOLSKA);
         WeatherDtoNoId weather3 = new WeatherDtoNoId(
-                8L, LocalDateTime.of(2020, 1, 20, 2, 44),
+                LocalDateTime.of(2020, 1, 20, 2, 44),
                 2.5, 30, 100, -2.4, -8,
                 TEST_PRECIPITATION_TYPE_3, LOTNICZA);
         weatherList.add(weather1);
@@ -65,7 +65,6 @@ public class WeatherControllerTestSuite {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].sourceId", is(1)))
                 .andExpect(jsonPath("$[1].measuringTime", is("2020-01-21T02:00:00")))
                 .andExpect(jsonPath("$[2].windSpeed", is(2.5)))
                 .andExpect(jsonPath("$[0].windDirection", is((double) 180)))
@@ -93,8 +92,7 @@ public class WeatherControllerTestSuite {
     public void shouldFetchWeatherOnGivenStation() throws Exception {
         //Given
         String givenStationName = "Given_Station_Name";
-        WeatherDtoNoId weather = new WeatherDtoNoId(
-                1L, LocalDateTime.of(2020, 1, 20, 22, 40),
+        WeatherDtoNoId weather = new WeatherDtoNoId(LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
         when(weatherService.getWeatherOnStation(givenStationName)).thenReturn(weather);
@@ -103,7 +101,6 @@ public class WeatherControllerTestSuite {
         mockMvc.perform(get("/weather/" + givenStationName)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("sourceId", is(1)))
                 .andExpect(jsonPath("measuringTime", is("2020-01-20T22:40:00")))
                 .andExpect(jsonPath("windSpeed", is((double) 10)))
                 .andExpect(jsonPath("windDirection", is((double) 180)))
@@ -118,7 +115,7 @@ public class WeatherControllerTestSuite {
     public void shouldFetchWeatherOnNearestStationFromGivenLocation() throws Exception {
         //Given
         WeatherDtoNoId weather = new WeatherDtoNoId(
-                1L, LocalDateTime.of(2020, 1, 20, 22, 40),
+                LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
         when(weatherService.getWeatherOnNearestStationFromGivenLocation(any(GPSLocationDtoNoIdNoType.class)))
@@ -133,7 +130,6 @@ public class WeatherControllerTestSuite {
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("sourceId", is(1)))
                 .andExpect(jsonPath("measuringTime", is("2020-01-20T22:40:00")))
                 .andExpect(jsonPath("windSpeed", is((double) 10)))
                 .andExpect(jsonPath("windDirection", is((double) 180)))
@@ -161,7 +157,7 @@ public class WeatherControllerTestSuite {
     public void shouldFetchWeatherOnNearestStationFromUser() throws Exception {
         //Given
         WeatherDtoNoId weather = new WeatherDtoNoId(
-                1L, LocalDateTime.of(2020, 1, 20, 22, 40),
+                LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
         when(weatherService.getWeatherOnNearestStationFromUser(anyLong()))
@@ -171,7 +167,6 @@ public class WeatherControllerTestSuite {
         mockMvc.perform(get("/weather/user/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("sourceId", is(1)))
                 .andExpect(jsonPath("measuringTime", is("2020-01-20T22:40:00")))
                 .andExpect(jsonPath("windSpeed", is((double) 10)))
                 .andExpect(jsonPath("windDirection", is((double) 180)))

@@ -21,7 +21,6 @@ public class WeatherMapper {
 
     public WeatherDtoNoId mapToWeatherDto(Weather weather) {
         return new WeatherDtoNoId(
-                weather.getSourceId(),
                 weather.getMeasuringTime(),
                 weather.getWindSpeed(),
                 weather.getWindDirection(),
@@ -35,7 +34,6 @@ public class WeatherMapper {
 
     public Weather mapToWeather(WeatherDtoNoId weatherDto) {
         return new Weather(
-                weatherDto.getSourceId(),
                 weatherDto.getMeasuringTime(),
                 weatherDto.getWindSpeed(),
                 weatherDto.getWindDirection(),

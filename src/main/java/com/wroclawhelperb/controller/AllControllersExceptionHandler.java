@@ -1,6 +1,7 @@
 package com.wroclawhelperb.controller;
 
 
+import com.wroclawhelperb.exception.BikeStationNotFoundException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import org.slf4j.Logger;
@@ -27,6 +28,13 @@ public class AllControllersExceptionHandler {
     public String weatherStationNotFoundExceptionHandler() {
         LOGGER.error("No such Weather Station");
         return "No such Weather Station";
+    }
+
+    @ExceptionHandler(BikeStationNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No Bike Station with given id")
+    public String bikeStationNotFoundExceptionHandler() {
+        LOGGER.error("No such Bike Station");
+        return "No such Bike Station";
     }
 
 }

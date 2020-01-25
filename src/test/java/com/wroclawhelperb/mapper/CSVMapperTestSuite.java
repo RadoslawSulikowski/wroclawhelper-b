@@ -1,10 +1,12 @@
 package com.wroclawhelperb.mapper;
 
-import com.wroclawhelperb.domain.bike.station.BikeStationDto;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import com.wroclawhelperb.domain.bike.BikeStationDto;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
-import com.wroclawhelperb.logging.StaticAppender;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,14 +21,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CSVMapperTestSuite {
 
-    @BeforeEach
-    public void clearLoggingStatements() {
-        StaticAppender.clearEvents();
+
+    private List<ILoggingEvent> prepareLogList() {
+        Logger csvMapperLogger = (Logger) LoggerFactory.getLogger(CSVMapper.class);
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        csvMapperLogger.addAppender(listAppender);
+        return listAppender.list;
     }
 
     @Test
     public void shouldLogErrorMalformedURLExceptionAndReturnEmptyArray() {
         //Given
+        List<ILoggingEvent> logsList = prepareLogList();
         String sUrl = "wrong string url address";
 
         //When
@@ -35,13 +42,14 @@ public class CSVMapperTestSuite {
         //Then
         assertTrue(list instanceof ArrayList);
         assertEquals(0, list.size());
-        assertThat(StaticAppender.getEvents()).extracting("message")
+        assertThat(logsList).extracting("message")
                 .containsOnly("Can not creat URL from given String");
     }
 
     @Test
     public void shouldLogErrorIOExceptionAndReturnEmptyArray() throws MalformedURLException {
         //Given
+        List<ILoggingEvent> logsList = prepareLogList();
         URL url = new URL("https://www.wroclaw.pl/open-data/datastore/dump/9d5b2336");
 
         //When
@@ -50,7 +58,7 @@ public class CSVMapperTestSuite {
         //Then
         assertTrue(list instanceof ArrayList);
         assertEquals(0, list.size());
-        assertThat(StaticAppender.getEvents()).extracting("message")
+        assertThat(logsList).extracting("message")
                 .containsOnly("Can not obtain data from external Weather API");
     }
 

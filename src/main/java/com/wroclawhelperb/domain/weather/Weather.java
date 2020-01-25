@@ -21,9 +21,6 @@ public class Weather implements Locable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "sourceId")
-    private Long sourceId;
-
     @Column(name = "measuringTime")
     private LocalDateTime measuringTime;
 
@@ -49,10 +46,9 @@ public class Weather implements Locable {
     @JoinColumn(name = "weatherStationName", referencedColumnName = "shortName")
     private WeatherStation weatherStation;
 
-    public Weather(Long sourceId, LocalDateTime measuringTime, double windSpeed, double windDirection,
+    public Weather(LocalDateTime measuringTime, double windSpeed, double windDirection,
                    double humidity, double airTemperature, double groundTemperature,
                    String precipitationType, WeatherStation weatherStation) {
-        this.sourceId = sourceId;
         this.measuringTime = measuringTime;
         this.windSpeed = windSpeed;
         this.windDirection = windDirection;
@@ -71,7 +67,6 @@ public class Weather implements Locable {
     public String toString() {
         return "Weather{" +
                 "id=" + id +
-                ", sourceId=" + sourceId +
                 ", measuringTime=" + measuringTime +
                 ", windSpeed=" + windSpeed +
                 ", windDirection=" + windDirection +
