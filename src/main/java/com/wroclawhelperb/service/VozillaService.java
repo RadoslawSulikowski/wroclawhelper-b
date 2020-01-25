@@ -1,6 +1,7 @@
 package com.wroclawhelperb.service;
 
 import com.wroclawhelperb.domain.location.GPSLocation;
+import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.vozilla.VozillaCarDto;
 import com.wroclawhelperb.domain.vozilla.VozillaCarDtoList;
@@ -53,24 +54,29 @@ public class VozillaService {
         }
     }
 
-    public VozillaCarDto getNearestAvailableCarFromGivenLocation(GPSLocation location) {
-        return (VozillaCarDto) location.findNearest(getVozillaCarList()
-                .stream()
-                .filter(c -> c.getStatus().equals("AVAILABLE "))
-                .collect(Collectors.toList()));
-    }
-
-    public VozillaCarDto getNearestAvailableCarFromUser(Long userId) throws UserNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return getNearestAvailableCarFromGivenLocation(user.getLocation());
-
-    }
-
     public VozillaCarDto getCarByPlatesNumber(String platesNumber) throws CarNotFoundException {
         return getVozillaCarList()
                 .stream()
                 .filter(c -> c.getPlatesNumber().equals(platesNumber))
                 .findFirst()
                 .orElseThrow(CarNotFoundException::new);
+    }
+
+    private VozillaCarDto getNearestAvailableCar(GPSLocation location) {
+        return (VozillaCarDto) location.findNearest(getVozillaCarList()
+                .stream()
+                .filter(c -> c.getStatus().equals("AVAILABLE "))
+                .collect(Collectors.toList()));
+    }
+
+    public VozillaCarDto getNearestAvailableCar(GPSLocationDtoNoIdNoType locationDto) {
+        GPSLocation location = new GPSLocation(locationDto.getLatitude(), locationDto.getLongitude());
+        return getNearestAvailableCar(location);
+    }
+
+    public VozillaCarDto getNearestAvailableCar(Long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return getNearestAvailableCar(user.getLocation());
+
     }
 }

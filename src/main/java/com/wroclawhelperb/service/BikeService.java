@@ -3,8 +3,11 @@ package com.wroclawhelperb.service;
 import com.wroclawhelperb.domain.bike.BikeStationDto;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
+import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.exception.BikeStationNotFoundException;
+import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.mapper.CSVMapper;
+import com.wroclawhelperb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +17,28 @@ import java.util.stream.Collectors;
 @Service
 public class BikeService {
 
+    private final UserRepository userRepository;
+
     @Value("${bike.station.api.endpoint}")
     private String sourceUrl;
 
+    public BikeService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    public BikeStationDto getNearestStationWithAvailableBike(GPSLocation location) {
+    public List<BikeStationDto> getAllStations() {
+        return CSVMapper.mapToBikeStationList(sourceUrl);
+    }
+
+    public BikeStationDto getStationById(Long stationId) throws BikeStationNotFoundException {
+        return CSVMapper.mapToBikeStationList(sourceUrl)
+                .stream()
+                .filter(s -> s.getUniqueId().equals(stationId))
+                .findFirst()
+                .orElseThrow(BikeStationNotFoundException::new);
+    }
+
+    private BikeStationDto getNearestStationWithAvailableBike(GPSLocation location) {
         List<BikeStationDto> stationList = CSVMapper.mapToBikeStationList(sourceUrl)
                 .stream()
                 .filter(s -> !s.getBikeList().isEmpty())
@@ -31,14 +51,8 @@ public class BikeService {
         return getNearestStationWithAvailableBike(location);
     }
 
-    public List<BikeStationDto> getAllStations() {
-        return CSVMapper.mapToBikeStationList(sourceUrl);    }
-
-    public BikeStationDto geTStationById(Long stationId) throws BikeStationNotFoundException {
-        return CSVMapper.mapToBikeStationList(sourceUrl)
-                .stream()
-                .filter(s -> s.getUniqueId().equals(stationId))
-                .findFirst()
-                .orElseThrow(BikeStationNotFoundException::new);
+    public BikeStationDto getNearestStationWithAvailableBike(Long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return getNearestStationWithAvailableBike(user.getLocation());
     }
 }

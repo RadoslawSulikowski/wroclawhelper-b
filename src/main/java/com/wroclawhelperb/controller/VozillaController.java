@@ -1,6 +1,6 @@
 package com.wroclawhelperb.controller;
 
-import com.wroclawhelperb.domain.location.GPSLocation;
+import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
 import com.wroclawhelperb.domain.vozilla.VozillaCarDto;
 import com.wroclawhelperb.exception.CarNotFoundException;
 import com.wroclawhelperb.exception.UserNotFoundException;
@@ -30,15 +30,14 @@ public class VozillaController {
         return vozillaService.getCarByPlatesNumber(platesNumber);
     }
 
-
     @GetMapping("/location")
-    public VozillaCarDto getNearestAvailableCarFromGivenLocation(@RequestBody GPSLocation location) {
-        return vozillaService.getNearestAvailableCarFromGivenLocation(location);
+    public VozillaCarDto getNearestAvailableCarFromGivenLocation(@RequestBody GPSLocationDtoNoIdNoType location) {
+        return vozillaService.getNearestAvailableCar(location);
     }
 
     @GetMapping("/{userId}")
     public VozillaCarDto getNearestAvailableCarFromUser(@PathVariable Long userId)
             throws UserNotFoundException {
-        return vozillaService.getNearestAvailableCarFromUser(userId);
+        return vozillaService.getNearestAvailableCar(userId);
     }
 }

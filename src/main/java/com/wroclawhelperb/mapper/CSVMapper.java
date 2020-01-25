@@ -2,7 +2,6 @@ package com.wroclawhelperb.mapper;
 
 import com.wroclawhelperb.domain.bike.BikeStationDto;
 import com.wroclawhelperb.domain.location.GPSLocation;
-import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,8 +65,6 @@ public class CSVMapper {
 
     public static List<BikeStationDto> mapToBikeStationList(URL url) {
         try {
-//            File file = new File("C:/Users/Radek/Downloads/42eea6ec-43c3-4d13-aa77-a93394d6165a.csv");
-//            Scanner scanner = new Scanner(file);
             Scanner scanner = new Scanner(url.openStream(), "UTF-8");
             List<BikeStationDto> bikeStationList = new ArrayList<>();
             int lineCounter = 0;

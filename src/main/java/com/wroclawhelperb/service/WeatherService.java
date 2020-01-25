@@ -1,6 +1,5 @@
 package com.wroclawhelperb.service;
 
-import com.wroclawhelperb.domain.Locable;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.location.GPSLocationDtoNoIdNoType;
 import com.wroclawhelperb.domain.user.User;
@@ -36,30 +35,25 @@ public class WeatherService {
     }
 
     public WeatherDtoNoId getWeatherOnStation(String stationId) throws WeatherStationNotFoundException {
-        return CSVMapper.mapToWeatherList(sourceUrl).stream()
+        return getWeatherOnAllStations().stream()
                 .filter(w -> w.getWeatherStationName().equals(stationId.toUpperCase()))
                 .findFirst()
                 .orElseThrow(WeatherStationNotFoundException::new);
     }
 
-    public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(GPSLocation location) {
+    private WeatherDtoNoId getWeatherOnNearestStation(GPSLocation location) {
         return weatherMapper.mapToWeatherDto(
-                (Weather) location.findNearest(weatherMapper.mapToWeatherList(CSVMapper.mapToWeatherList(sourceUrl)))
-        );
+                (Weather) location.findNearest(weatherMapper.mapToWeatherList(getWeatherOnAllStations())));
     }
 
-    public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(GPSLocationDtoNoIdNoType locationDto) {
+    public WeatherDtoNoId getWeatherOnNearestStation(GPSLocationDtoNoIdNoType locationDto) {
         GPSLocation location = new GPSLocation(locationDto.getLatitude(), locationDto.getLongitude());
-        return getWeatherOnNearestStationFromGivenLocation(location);
+        return getWeatherOnNearestStation(location);
     }
 
-    public WeatherDtoNoId getWeatherOnNearestStationFromLocable(Locable locable) {
-        return getWeatherOnNearestStationFromGivenLocation(locable.getLocation());
-    }
-
-    public WeatherDtoNoId getWeatherOnNearestStationFromUser(Long userId) throws UserNotFoundException {
+    public WeatherDtoNoId getWeatherOnNearestStation(Long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return getWeatherOnNearestStationFromLocable(user);
+        return getWeatherOnNearestStation(user.getLocation());
     }
 }
 

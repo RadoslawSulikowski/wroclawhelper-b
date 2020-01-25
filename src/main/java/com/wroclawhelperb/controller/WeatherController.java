@@ -32,12 +32,12 @@ public class WeatherController {
 
     @GetMapping(value = "/location")
     public WeatherDtoNoId getWeatherOnNearestStationFromGivenLocation(@RequestBody GPSLocationDtoNoIdNoType location) {
-        return weatherService.getWeatherOnNearestStationFromGivenLocation(location);
+        return weatherService.getWeatherOnNearestStation(location);
     }
 
     @GetMapping("/user/{userId}")
     public WeatherDtoNoId getWeatherOnNearestStationFromUser(@PathVariable Long userId)
             throws UserNotFoundException {
-        return weatherService.getWeatherOnNearestStationFromUser(userId);
+        return weatherService.getWeatherOnNearestStation(userId);
     }
 }

@@ -118,7 +118,7 @@ public class WeatherControllerTestSuite {
                 LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
-        when(weatherService.getWeatherOnNearestStationFromGivenLocation(any(GPSLocationDtoNoIdNoType.class)))
+        when(weatherService.getWeatherOnNearestStation(any(GPSLocationDtoNoIdNoType.class)))
                 .thenReturn(weather);
         GPSLocationDtoNoIdNoType givenLocation = new GPSLocationDtoNoIdNoType(1.0, 1.0);
         Gson gson = new Gson();
@@ -143,7 +143,7 @@ public class WeatherControllerTestSuite {
     @Test
     public void shouldHandleUserNotFoundException() throws Exception {
         //Given
-        when(weatherService.getWeatherOnNearestStationFromUser(anyLong()))
+        when(weatherService.getWeatherOnNearestStation(anyLong()))
                 .thenThrow(UserNotFoundException.class);
 
         //When & Then
@@ -160,7 +160,7 @@ public class WeatherControllerTestSuite {
                 LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
-        when(weatherService.getWeatherOnNearestStationFromUser(anyLong()))
+        when(weatherService.getWeatherOnNearestStation(anyLong()))
                 .thenReturn(weather);
 
         //When & Then

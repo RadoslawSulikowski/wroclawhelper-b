@@ -49,22 +49,20 @@ public class UserControllerTestSuite {
     @Test
     public void shouldFetchUserList() throws Exception {
         //Given
-        GPSLocation location1 = new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION);
-        GPSLocation location2 = new GPSLocation(2.0, 2.0, GPSLocation.USER_FAVORITE_LOCATION);
         UserDtoNoPassword user1 = new UserDtoNoPassword(
                 1L,
                 "fName1",
                 "lName1",
                 "uName1",
                 "mail1",
-                location1);
+                new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION));
         UserDtoNoPassword user2 = new UserDtoNoPassword(
                 2L,
                 "fName2",
                 "lName2",
                 "uName2",
                 "mail2",
-                location2);
+                new GPSLocation(2.0, 2.0, GPSLocation.USER_FAVORITE_LOCATION));
         List<UserDtoNoPassword> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
@@ -98,7 +96,6 @@ public class UserControllerTestSuite {
     @Test
     public void shouldFetchUser() throws Exception {
         //Given
-        GPSLocation location = new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION);
         UserDtoNoPassword user =
                 new UserDtoNoPassword(
                         1L,
@@ -106,7 +103,7 @@ public class UserControllerTestSuite {
                         "lName",
                         "uName",
                         "mail",
-                        location);
+                        new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
         when(userService.getUser(anyLong())).thenReturn(user);
 
         //When & Then
@@ -125,14 +122,13 @@ public class UserControllerTestSuite {
     @Test
     public void shouldAddUser() throws Exception {
         //Given
-        GPSLocation location = new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION);
         UserDtoNoId userDto = new UserDtoNoId(
                 "fName",
                 "lName",
                 "uName",
                 "pass",
                 "mail",
-                location);
+                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
         when(userService.addUser(userDto)).thenReturn(1L);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
@@ -165,7 +161,6 @@ public class UserControllerTestSuite {
     @Test
     public void shouldUpdateUser() throws Exception {
         //Given
-        GPSLocation location = new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION);
         UserDtoFull userDto = new UserDtoFull(
                 1L,
                 "fName",
@@ -173,14 +168,14 @@ public class UserControllerTestSuite {
                 "uName",
                 "pass",
                 "mail",
-                location);
+                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
         UserDtoNoPassword userDtoNoPassword = new UserDtoNoPassword(
                 1L,
                 "fName",
                 "lName",
                 "uName",
                 "mail",
-                location);
+                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
         when(userService.updateUser(any(UserDtoFull.class))).thenReturn(userDtoNoPassword);
 
         Gson gson = new Gson();
