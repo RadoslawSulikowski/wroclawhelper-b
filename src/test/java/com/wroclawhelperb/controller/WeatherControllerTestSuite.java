@@ -27,20 +27,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(WeatherController.class)
-public class WeatherControllerTestSuite {
+class WeatherControllerTestSuite {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private WeatherService weatherService;
+    private WeatherService service;
 
     private static final String TEST_PRECIPITATION_TYPE_1 = "TEST PRECIPITATION TYPE 1";
     private static final String TEST_PRECIPITATION_TYPE_2 = "TEST PRECIPITATION TYPE 2";
     private static final String TEST_PRECIPITATION_TYPE_3 = "TEST PRECIPITATION TYPE 3";
 
     @Test
-    public void shouldFetchWeatherDtoList() throws Exception {
+    void shouldFetchWeatherDtoList() throws Exception {
         //Given
         List<WeatherDtoNoId> weatherList = new ArrayList<>();
         WeatherDtoNoId weather1 = new WeatherDtoNoId(
@@ -58,7 +58,7 @@ public class WeatherControllerTestSuite {
         weatherList.add(weather1);
         weatherList.add(weather2);
         weatherList.add(weather3);
-        when(weatherService.getWeatherOnAllStations()).thenReturn(weatherList);
+        when(service.getWeatherOnAllStations()).thenReturn(weatherList);
 
         //When & Then
         mockMvc.perform(get("/weather")
@@ -76,9 +76,9 @@ public class WeatherControllerTestSuite {
     }
 
     @Test
-    public void shouldHandleWeatherStationNotFoundException() throws Exception {
+    void shouldHandleWeatherStationNotFoundException() throws Exception {
         //Given
-        when(weatherService.getWeatherOnStation(anyString()))
+        when(service.getWeatherOnStation(anyString()))
                 .thenThrow(WeatherStationNotFoundException.class);
 
         //When & Then
@@ -89,13 +89,13 @@ public class WeatherControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchWeatherOnGivenStation() throws Exception {
+    void shouldFetchWeatherOnGivenStation() throws Exception {
         //Given
         String givenStationName = "Given_Station_Name";
         WeatherDtoNoId weather = new WeatherDtoNoId(LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
-        when(weatherService.getWeatherOnStation(givenStationName)).thenReturn(weather);
+        when(service.getWeatherOnStation(givenStationName)).thenReturn(weather);
 
         //When & Then
         mockMvc.perform(get("/weather/" + givenStationName)
@@ -112,13 +112,13 @@ public class WeatherControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchWeatherOnNearestStationFromGivenLocation() throws Exception {
+    void shouldFetchWeatherOnNearestStationFromGivenLocation() throws Exception {
         //Given
         WeatherDtoNoId weather = new WeatherDtoNoId(
                 LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
-        when(weatherService.getWeatherOnNearestStation(any(GPSLocationDtoNoIdNoType.class)))
+        when(service.getWeatherOnNearestStation(any(GPSLocationDtoNoIdNoType.class)))
                 .thenReturn(weather);
         GPSLocationDtoNoIdNoType givenLocation = new GPSLocationDtoNoIdNoType(1.0, 1.0);
         Gson gson = new Gson();
@@ -141,9 +141,9 @@ public class WeatherControllerTestSuite {
     }
 
     @Test
-    public void shouldHandleUserNotFoundException() throws Exception {
+    void shouldHandleUserNotFoundException() throws Exception {
         //Given
-        when(weatherService.getWeatherOnNearestStation(anyLong()))
+        when(service.getWeatherOnNearestStation(anyLong()))
                 .thenThrow(UserNotFoundException.class);
 
         //When & Then
@@ -154,13 +154,13 @@ public class WeatherControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchWeatherOnNearestStationFromUser() throws Exception {
+    void shouldFetchWeatherOnNearestStationFromUser() throws Exception {
         //Given
         WeatherDtoNoId weather = new WeatherDtoNoId(
                 LocalDateTime.of(2020, 1, 20, 22, 40),
                 10.0, 180, 50, 10, 20,
                 TEST_PRECIPITATION_TYPE_1, MILENIJNY);
-        when(weatherService.getWeatherOnNearestStation(anyLong()))
+        when(service.getWeatherOnNearestStation(anyLong()))
                 .thenReturn(weather);
 
         //When & Then

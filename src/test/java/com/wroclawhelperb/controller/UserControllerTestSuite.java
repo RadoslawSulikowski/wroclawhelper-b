@@ -27,18 +27,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-public class UserControllerTestSuite {
+class UserControllerTestSuite {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private UserService service;
 
     @Test
-    public void shouldFetchEmptyArray() throws Exception {
+    void shouldFetchEmptyArray() throws Exception {
         //Given
-        when(userService.getAllUsers()).thenReturn(new ArrayList<>());
+        when(service.getAllUsers()).thenReturn(new ArrayList<>());
 
         //When & Then
         mockMvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
@@ -47,7 +47,7 @@ public class UserControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchUserList() throws Exception {
+    void shouldFetchUserList() throws Exception {
         //Given
         UserDtoNoPassword user1 = new UserDtoNoPassword(
                 1L,
@@ -66,7 +66,7 @@ public class UserControllerTestSuite {
         List<UserDtoNoPassword> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
-        when(userService.getAllUsers()).thenReturn(users);
+        when(service.getAllUsers()).thenReturn(users);
 
         //When & Then
         mockMvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
@@ -83,9 +83,9 @@ public class UserControllerTestSuite {
     }
 
     @Test
-    public void shouldHandleUserNotFoundExceptionGetUser() throws Exception {
+    void shouldHandleUserNotFoundExceptionGetUser() throws Exception {
         //Given
-        when(userService.getUser(anyLong())).thenThrow(UserNotFoundException.class);
+        when(service.getUser(anyLong())).thenThrow(UserNotFoundException.class);
 
         //When & Then
         mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))
@@ -94,7 +94,7 @@ public class UserControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchUser() throws Exception {
+    void shouldFetchUser() throws Exception {
         //Given
         UserDtoNoPassword user =
                 new UserDtoNoPassword(
@@ -104,7 +104,7 @@ public class UserControllerTestSuite {
                         "uName",
                         "mail",
                         new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
-        when(userService.getUser(anyLong())).thenReturn(user);
+        when(service.getUser(anyLong())).thenReturn(user);
 
         //When & Then
         mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))
@@ -120,7 +120,7 @@ public class UserControllerTestSuite {
     }
 
     @Test
-    public void shouldAddUser() throws Exception {
+    void shouldAddUser() throws Exception {
         //Given
         UserDtoNoId userDto = new UserDtoNoId(
                 "fName",
@@ -129,7 +129,7 @@ public class UserControllerTestSuite {
                 "pass",
                 "mail",
                 new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
-        when(userService.addUser(userDto)).thenReturn(1L);
+        when(service.addUser(userDto)).thenReturn(1L);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
 
@@ -143,10 +143,10 @@ public class UserControllerTestSuite {
     }
 
     @Test
-    public void shouldHandleUserNotFoundExceptionUpdateUser() throws Exception {
+    void shouldHandleUserNotFoundExceptionUpdateUser() throws Exception {
         //Given
         UserDtoFull userDto = new UserDtoFull();
-        when(userService.updateUser(any(UserDtoFull.class))).thenThrow(UserNotFoundException.class);
+        when(service.updateUser(any(UserDtoFull.class))).thenThrow(UserNotFoundException.class);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
 
@@ -159,7 +159,7 @@ public class UserControllerTestSuite {
     }
 
     @Test
-    public void shouldUpdateUser() throws Exception {
+    void shouldUpdateUser() throws Exception {
         //Given
         UserDtoFull userDto = new UserDtoFull(
                 1L,
@@ -176,7 +176,7 @@ public class UserControllerTestSuite {
                 "uName",
                 "mail",
                 new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
-        when(userService.updateUser(any(UserDtoFull.class))).thenReturn(userDtoNoPassword);
+        when(service.updateUser(any(UserDtoFull.class))).thenReturn(userDtoNoPassword);
 
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
@@ -199,9 +199,9 @@ public class UserControllerTestSuite {
 
 
     @Test
-    public void shouldHandleUserNotFoundExceptionDeleteUser() throws Exception {
+    void shouldHandleUserNotFoundExceptionDeleteUser() throws Exception {
         //Given
-        doThrow(UserNotFoundException.class).when(userService).deleteUser(anyLong());
+        doThrow(UserNotFoundException.class).when(service).deleteUser(anyLong());
 
         //When & Then
         mockMvc.perform(delete("/users/1").contentType(MediaType.APPLICATION_JSON))
@@ -210,9 +210,9 @@ public class UserControllerTestSuite {
     }
 
     @Test
-    public void shouldDeleteUser() throws Exception {
+    void shouldDeleteUser() throws Exception {
         //Given
-        doNothing().when(userService).deleteUser(anyLong());
+        doNothing().when(service).deleteUser(anyLong());
 
         //When & Then
         mockMvc.perform(delete("/users/1")

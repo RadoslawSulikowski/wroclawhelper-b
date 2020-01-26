@@ -35,7 +35,7 @@ public class VozillaController {
         return vozillaService.getNearestAvailableCar(location);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public VozillaCarDto getNearestAvailableCarFromUser(@PathVariable Long userId)
             throws UserNotFoundException {
         return vozillaService.getNearestAvailableCar(userId);

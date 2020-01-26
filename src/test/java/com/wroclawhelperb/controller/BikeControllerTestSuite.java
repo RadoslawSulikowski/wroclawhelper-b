@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BikeController.class)
-public class BikeControllerTestSuite {
+class BikeControllerTestSuite {
 
     private static final String STATION_NAME_1 = "STATION_NAME_1";
     private static final String STATION_NAME_2 = "STATION_NAME_2";
@@ -41,7 +41,7 @@ public class BikeControllerTestSuite {
 
 
     @Test
-    public void shouldFetchBikeStationList() throws Exception {
+    void shouldFetchBikeStationList() throws Exception {
         //Given
         when(service.getAllStations()).thenReturn(prepareBikeList());
 
@@ -61,7 +61,7 @@ public class BikeControllerTestSuite {
     }
 
     @Test
-    public void shouldHandleBikeStationNotFoundException() throws Exception {
+    void shouldHandleBikeStationNotFoundException() throws Exception {
         //Given
         when(service.getStationById(anyLong())).thenThrow(new BikeStationNotFoundException());
 
@@ -72,7 +72,7 @@ public class BikeControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchBikeStationById() throws Exception {
+    void shouldFetchBikeStationById() throws Exception {
         //Given
         BikeStationDto station = new BikeStationDto(1L, 1, 1, 3,
                 new ArrayList<>(Arrays.asList(123, 456, 789)),
@@ -93,7 +93,7 @@ public class BikeControllerTestSuite {
     }
 
     @Test
-    public void shouldHandleUserNotFoundException() throws Exception {
+    void shouldHandleUserNotFoundException() throws Exception {
         //Given
         when(service.getNearestStationWithAvailableBike(anyLong())).thenThrow(new UserNotFoundException());
 
@@ -104,7 +104,7 @@ public class BikeControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchBikeStationConsumesLocation() throws Exception {
+    void shouldFetchBikeStationConsumesLocation() throws Exception {
         //Given
         BikeStationDto station = new BikeStationDto(1L, 1, 1, 3,
                 new ArrayList<>(Arrays.asList(123, 456, 789)),
@@ -130,7 +130,7 @@ public class BikeControllerTestSuite {
     }
 
     @Test
-    public void shouldFetchBikeStationConsumesUserId() throws Exception {
+    void shouldFetchBikeStationConsumesUserId() throws Exception {
         //Given
         BikeStationDto station = new BikeStationDto(1L, 1, 1, 3,
                 new ArrayList<>(Arrays.asList(123, 456, 789)),
