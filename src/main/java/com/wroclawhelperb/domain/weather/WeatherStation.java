@@ -60,31 +60,6 @@ public class WeatherStation implements Locable {
         return "";
     }
 
-    public static String shortNameToName(String name) {
-        if (name.equals("LOTNICZA")) {
-            return LOTNICZA;
-        }
-        if (name.equals("DMOWSKIEGO")) {
-            return DMOWSKIEGO;
-        }
-        if (name.equals("SOBIESKIEGO")) {
-            return SOBIESKIEGO;
-        }
-        if (name.equals("OPOLSKA")) {
-            return OPOLSKA;
-        }
-        if (name.equals("GADOWIANKA")) {
-            return GADOWIANKA;
-        }
-        if (name.equals("MILENIJNY")) {
-            return MILENIJNY;
-        }
-        if (name.equals("WARSZAWSKI")) {
-            return WARSZAWSKI;
-        }
-        return "";
-    }
-
     @Override
     public String toString() {
         return "WeatherStation{" +
