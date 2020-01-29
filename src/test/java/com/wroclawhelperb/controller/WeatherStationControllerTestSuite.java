@@ -1,5 +1,6 @@
 package com.wroclawhelperb.controller;
 
+import com.google.gson.Gson;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
 import com.wroclawhelperb.service.WeatherStationService;
@@ -15,8 +16,11 @@ import java.util.Arrays;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,5 +65,23 @@ class WeatherStationControllerTestSuite {
                 .andExpect(jsonPath("$[1].name", is("Station2")))
                 .andExpect(jsonPath("$[1].location.latitude", is(2.0)))
                 .andExpect(jsonPath("$[1].location.longitude", is(2.5)));
+    }
+
+    @Test
+    void shouldCreatWeatherStation() throws Exception {
+        //Given
+        WeatherStationDto station = new WeatherStationDto("shortName", "name",
+                new GPSLocation(1.0, 1.5));
+        doNothing().when(service).addNewWeatherStation(any(WeatherStationDto.class));
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(station);
+
+        //When & Then
+        mockMvc.perform(post("/weatherstations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().is(201))
+                .andExpect(status().reason("Weather station successful added"));
     }
 }

@@ -29,4 +29,8 @@ public class WeatherStationService {
         });
         return stations;
     }
+
+    public void addNewWeatherStation(WeatherStationDto station) {
+        weatherStationRepository.save(weatherStationMapper.mapToWeatherStation(station));
+    }
 }

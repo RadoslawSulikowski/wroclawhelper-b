@@ -10,4 +10,9 @@ public class WeatherStationMapper {
     public WeatherStationDto mapToWeatherStationDto(WeatherStation station) {
         return new WeatherStationDto(station.getShortName(), station.getName(), station.getLocation());
     }
+
+    public WeatherStation mapToWeatherStation(WeatherStationDto station) {
+        return new WeatherStation(station.getShortName(), station.getName(), station.getLocation());
+    }
+
 }

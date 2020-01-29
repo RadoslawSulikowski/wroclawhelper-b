@@ -2,9 +2,8 @@ package com.wroclawhelperb.controller;
 
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
 import com.wroclawhelperb.service.WeatherStationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +20,11 @@ public class WeatherStationController {
     @GetMapping
     public List<WeatherStationDto> getStations() {
         return weatherStationService.getWeatherStations();
+    }
+
+    @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED, reason = "Weather station successful added")
+    public void addNewWeatherStation(@RequestBody WeatherStationDto station) {
+        weatherStationService.addNewWeatherStation(station);
     }
 }
