@@ -38,7 +38,6 @@ class WeatherStationControllerTestSuite {
         mockMvc.perform(get("/weatherstations").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(0)));
-
     }
 
     @Test

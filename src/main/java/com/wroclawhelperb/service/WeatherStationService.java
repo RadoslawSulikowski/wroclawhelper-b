@@ -21,7 +21,12 @@ public class WeatherStationService {
 
     public List<WeatherStationDto> getWeatherStations() {
         List<WeatherStationDto> stations = new ArrayList<>();
-        weatherStationRepository.findAll().forEach(s -> stations.add(weatherStationMapper.mapToWeatherStationDto(s)));
+        weatherStationRepository.findAll()
+                .forEach(s -> {
+            if (!s.getShortName().equals("UNKNOWN")) {
+                stations.add(weatherStationMapper.mapToWeatherStationDto(s));
+            }
+        });
         return stations;
     }
 }
