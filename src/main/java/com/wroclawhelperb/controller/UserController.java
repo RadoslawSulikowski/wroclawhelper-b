@@ -3,6 +3,7 @@ package com.wroclawhelperb.controller;
 import com.wroclawhelperb.domain.user.UserDtoFull;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,11 @@ public class UserController {
     @GetMapping(value = "/username/{username}")
     public UserDtoFull getUserByUserName(@PathVariable(name = "username") String username) throws UserNotFoundException {
         return userService.getUserByUsername(username);
+    }
+
+    @GetMapping(value = "/verify")
+    public boolean verifyUser(@RequestBody UserDtoUsernamePassword user) {
+        return userService.verifyUser(user);
     }
 
     @PutMapping

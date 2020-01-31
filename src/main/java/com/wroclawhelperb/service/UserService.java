@@ -1,9 +1,6 @@
 package com.wroclawhelperb.service;
 
-import com.wroclawhelperb.domain.user.User;
-import com.wroclawhelperb.domain.user.UserDtoFull;
-import com.wroclawhelperb.domain.user.UserDtoNoId;
-import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.*;
 import com.wroclawhelperb.encryptor.Encryptor;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.mapper.UserMapper;
@@ -91,6 +88,11 @@ public class UserService {
             LOGGER.error("There is no user with id " + id);
             throw new UserNotFoundException();
         }
+    }
+
+    public boolean verifyUser(UserDtoUsernamePassword user) {
+        return (userRepository.findByUserName(user.getUsername()).isPresent()
+                && userRepository.findByUserName(user.getUsername()).get().getPassword().equals(user.getPassword()));
     }
 
 }

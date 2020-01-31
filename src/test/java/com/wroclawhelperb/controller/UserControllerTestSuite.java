@@ -5,6 +5,7 @@ import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.UserDtoFull;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
 class UserControllerTestSuite {
@@ -271,4 +271,38 @@ class UserControllerTestSuite {
                 .andExpect(status().reason("User successful deleted"));
     }
 
+    @Test
+    void shouldReturnFalse() throws Exception {
+        //Given
+        when(service.verifyUser(any(UserDtoUsernamePassword.class))).thenReturn(false);
+        UserDtoUsernamePassword user = new UserDtoUsernamePassword("username", "password");
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(user);
+        //When & Then
+        mockMvc.perform(get("/users/verify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().is(200))
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().string("false"));
+    }
+
+    @Test
+    void shouldReturnTrue() throws Exception {
+        //Given
+        when(service.verifyUser(any(UserDtoUsernamePassword.class))).thenReturn(true);
+        UserDtoUsernamePassword user = new UserDtoUsernamePassword("username", "password");
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(user);
+
+        //When & Then
+        mockMvc.perform(get("/users/verify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().is(200))
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().string("true"));
+    }
 }
