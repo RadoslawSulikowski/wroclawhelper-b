@@ -86,7 +86,7 @@ class UserControllerTestSuite {
     }
 
     @Test
-    void shouldHandleUserNotFoundExceptionGetUser() throws Exception {
+    void shouldHandleUserNotFoundExceptionGetUserById() throws Exception {
         //Given
         when(service.getUserById(anyLong())).thenThrow(UserNotFoundException.class);
 
@@ -97,7 +97,7 @@ class UserControllerTestSuite {
     }
 
     @Test
-    void shouldFetchUser() throws Exception {
+    void shouldFetchUserById() throws Exception {
         //Given
         UserDtoNoPassword user =
                 new UserDtoNoPassword(
@@ -117,6 +117,47 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$.firstName", is("fName")))
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))
+                .andExpect(jsonPath("$.email", is("mail")))
+                .andExpect(jsonPath("$.location.latitude", is(2.0)))
+                .andExpect(jsonPath("$.location.longitude", is(3.0)))
+                .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))
+                .andExpect(jsonPath("$.schedulerOn", is(false)));
+    }
+
+    @Test
+    void shouldHandleUserNotFoundExceptionGetUserByUsername() throws Exception {
+        //Given
+        when(service.getUserByUsername(anyString())).thenThrow(UserNotFoundException.class);
+
+        //When & Then
+        mockMvc.perform(get("/users/username/username").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(404))
+                .andExpect(status().reason("No user with given id"));
+    }
+
+    @Test
+    void shouldFetchUserByUsername() throws Exception {
+        //Given
+        UserDtoFull user =
+                new UserDtoFull(
+                        1L,
+                        "fName",
+                        "lName",
+                        "uName",
+                        "password",
+                        "mail",
+                        new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
+                        false);
+        when(service.getUserByUsername(anyString())).thenReturn(user);
+
+        //When & Then
+        mockMvc.perform(get("/users/username/username").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstName", is("fName")))
+                .andExpect(jsonPath("$.lastName", is("lName")))
+                .andExpect(jsonPath("$.userName", is("uName")))
+                .andExpect(jsonPath("$.password", is("password")))
                 .andExpect(jsonPath("$.email", is("mail")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
