@@ -18,7 +18,7 @@ public class UserRepositoryTestSuite {
     public void testSaveUser() {
         //Given
         User user = new User("a", "a", "a", "a", "a",
-                new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION), true);
 
         //When
         user = userRepository.save(user);

@@ -15,7 +15,8 @@ public class UserMapper {
                 user.getLastName(),
                 user.getUserName(),
                 user.getEmail(),
-                user.getLocation()
+                user.getLocation(),
+                user.isSchedulerOn()
         );
     }
 
@@ -26,7 +27,8 @@ public class UserMapper {
                 userDtoNoId.getUserName(),
                 userDtoNoId.getPassword(),
                 userDtoNoId.getEmail(),
-                userDtoNoId.getLocation()
+                userDtoNoId.getLocation(),
+                userDtoNoId.isSchedulerOn()
         );
     }
 }

@@ -36,17 +36,22 @@ public class User implements Locable {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "schedulerOn")
+    private boolean schedulerOn;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "locationId")
     private GPSLocation location;
 
 
-    public User(String firstName, String lastName, String userName, String password, String email, GPSLocation location) {
+    public User(String firstName, String lastName, String userName, String password,
+                String email, GPSLocation location, boolean schedulerOn) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.password = Encryptor.encrypt(password);
         this.email = email;
         this.location = location;
+        this.schedulerOn = schedulerOn;
     }
 }

@@ -31,7 +31,7 @@ public class WeatherServiceTestSuite {
     public void testGetWeather() throws UserNotFoundException {
         //Given
         User user = new User("a", "a", "a", "a", "a",
-                new GPSLocation(51.138235, 16.973045, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(51.138235, 16.973045, GPSLocation.USER_FAVORITE_LOCATION), true);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         //When
         WeatherDtoNoId weather = weatherService.getWeatherOnNearestStation(1L);

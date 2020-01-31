@@ -32,7 +32,7 @@ public class UserTestSuite {
         stations.add(new WeatherStation(nameToShortName(OPOLSKA), OPOLSKA,
                 new GPSLocation(51.076724, 17.084888, GPSLocation.WEATHER_STATION_LOCATION)));
         User user = new User("a", "a", "a", "a", "a",
-                new GPSLocation(51.138235, 16.973045, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(51.138235, 16.973045, GPSLocation.USER_FAVORITE_LOCATION), true);
 
         //When
         WeatherStation nearestStation = (WeatherStation) user.getLocation().findNearest(stations);

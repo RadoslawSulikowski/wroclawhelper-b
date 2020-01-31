@@ -55,14 +55,16 @@ class UserControllerTestSuite {
                 "lName1",
                 "uName1",
                 "mail1",
-                new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION),
+                true);
         UserDtoNoPassword user2 = new UserDtoNoPassword(
                 2L,
                 "fName2",
                 "lName2",
                 "uName2",
                 "mail2",
-                new GPSLocation(2.0, 2.0, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(2.0, 2.0, GPSLocation.USER_FAVORITE_LOCATION),
+                false);
         List<UserDtoNoPassword> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
@@ -79,7 +81,8 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$[0].email", is("mail1")))
                 .andExpect(jsonPath("$[0].location.latitude", is(1.0)))
                 .andExpect(jsonPath("$[1].location.longitude", is(2.0)))
-                .andExpect(jsonPath("$[1].location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)));
+                .andExpect(jsonPath("$[1].location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))
+                .andExpect(jsonPath("$[0].schedulerOn", is(true)));
     }
 
     @Test
@@ -103,7 +106,8 @@ class UserControllerTestSuite {
                         "lName",
                         "uName",
                         "mail",
-                        new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
+                        new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
+                        false);
         when(service.getUser(anyLong())).thenReturn(user);
 
         //When & Then
@@ -116,7 +120,8 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$.email", is("mail")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
-                .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)));
+                .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))
+                .andExpect(jsonPath("$.schedulerOn", is(false)));
     }
 
     @Test
@@ -128,7 +133,8 @@ class UserControllerTestSuite {
                 "uName",
                 "pass",
                 "mail",
-                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
+                true);
         when(service.addUser(userDto)).thenReturn(1L);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
@@ -168,14 +174,16 @@ class UserControllerTestSuite {
                 "uName",
                 "pass",
                 "mail",
-                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
+                true);
         UserDtoNoPassword userDtoNoPassword = new UserDtoNoPassword(
                 1L,
                 "fName",
                 "lName",
                 "uName",
                 "mail",
-                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
+                true);
         when(service.updateUser(any(UserDtoFull.class))).thenReturn(userDtoNoPassword);
 
         Gson gson = new Gson();
@@ -194,7 +202,8 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$.email", is("mail")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
-                .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)));
+                .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))
+                .andExpect(jsonPath("$.schedulerOn", is(true)));
     }
 
 

@@ -17,4 +17,5 @@ public class UserDtoFull {
     private String password;
     private String email;
     private GPSLocation location;
+    private boolean schedulerOn;
 }
