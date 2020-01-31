@@ -1,6 +1,7 @@
 package com.wroclawhelperb.mapper;
 
 import com.wroclawhelperb.domain.user.User;
+import com.wroclawhelperb.domain.user.UserDtoFull;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,19 @@ public class UserMapper {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getUserName(),
+                user.getEmail(),
+                user.getLocation(),
+                user.isSchedulerOn()
+        );
+    }
+
+    public UserDtoFull mapToUserDtoFull(User user) {
+        return new UserDtoFull(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUserName(),
+                user.getPassword(),
                 user.getEmail(),
                 user.getLocation(),
                 user.isSchedulerOn()

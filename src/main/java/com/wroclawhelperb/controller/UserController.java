@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping(value = "/{userId}")
     public UserDtoNoPassword getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
-        return userService.getUser(id);
+        return userService.getUserById(id);
     }
 
     @PutMapping

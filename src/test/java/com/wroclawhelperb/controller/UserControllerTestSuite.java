@@ -88,7 +88,7 @@ class UserControllerTestSuite {
     @Test
     void shouldHandleUserNotFoundExceptionGetUser() throws Exception {
         //Given
-        when(service.getUser(anyLong())).thenThrow(UserNotFoundException.class);
+        when(service.getUserById(anyLong())).thenThrow(UserNotFoundException.class);
 
         //When & Then
         mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))
@@ -108,7 +108,7 @@ class UserControllerTestSuite {
                         "mail",
                         new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
                         false);
-        when(service.getUser(anyLong())).thenReturn(user);
+        when(service.getUserById(anyLong())).thenReturn(user);
 
         //When & Then
         mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))

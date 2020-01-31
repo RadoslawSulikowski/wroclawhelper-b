@@ -27,7 +27,7 @@ public class User implements Locable {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "userName")
+    @Column(name = "userName", unique = true)
     private String userName;
 
     @Column(name = "password")
