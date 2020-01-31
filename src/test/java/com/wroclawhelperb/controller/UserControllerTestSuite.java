@@ -91,7 +91,7 @@ class UserControllerTestSuite {
         when(service.getUserById(anyLong())).thenThrow(UserNotFoundException.class);
 
         //When & Then
-        mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/id/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(404))
                 .andExpect(status().reason("No user with given id"));
     }
@@ -111,7 +111,7 @@ class UserControllerTestSuite {
         when(service.getUserById(anyLong())).thenReturn(user);
 
         //When & Then
-        mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/id/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstName", is("fName")))

@@ -31,9 +31,14 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/id/{userId}")
     public UserDtoNoPassword getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
         return userService.getUserById(id);
+    }
+
+    @GetMapping(value = "/username/{username}")
+    public UserDtoFull getUserByUserName(@PathVariable(name = "username") String username) throws UserNotFoundException {
+        return userService.getUserByUsername(username);
     }
 
     @PutMapping
