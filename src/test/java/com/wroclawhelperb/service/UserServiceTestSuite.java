@@ -3,6 +3,7 @@ package com.wroclawhelperb.service;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.user.UserDtoFull;
+import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.encryptor.Encryptor;
 import com.wroclawhelperb.exception.UserNotFoundException;
@@ -35,12 +36,11 @@ class UserServiceTestSuite {
         location.setId(12L);
         User user = new User("a", "aa", "aaa", "A", "AA",
                 location, false);
-        user.setId(123L);
         Optional<User> userOpt = Optional.of(user);
         when(repository.findByUserName(anyString())).thenReturn(userOpt);
 
         //When
-        UserDtoFull returnedUserDto = service.getUserByUsername("A");
+        UserDtoNoId returnedUserDto = service.getUserByUsername("A");
 
         //Then
         assertEquals("a", returnedUserDto.getFirstName());
@@ -48,7 +48,6 @@ class UserServiceTestSuite {
         assertEquals("aaa", returnedUserDto.getUserName());
         assertEquals(Encryptor.encrypt("A"), returnedUserDto.getPassword());
         assertEquals("AA", returnedUserDto.getEmail());
-        assertEquals(123L, returnedUserDto.getId());
         assertEquals(12L, location.getId());
         assertFalse(returnedUserDto.isSchedulerOn());
         assertEquals(1.0, location.getLatitude(), 0);

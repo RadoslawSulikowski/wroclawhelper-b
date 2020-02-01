@@ -138,9 +138,8 @@ class UserControllerTestSuite {
     @Test
     void shouldFetchUserByUsername() throws Exception {
         //Given
-        UserDtoFull user =
-                new UserDtoFull(
-                        1L,
+        UserDtoNoId user =
+                new UserDtoNoId(
                         "fName",
                         "lName",
                         "uName",
@@ -153,7 +152,6 @@ class UserControllerTestSuite {
         //When & Then
         mockMvc.perform(get("/users/username/username").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstName", is("fName")))
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))

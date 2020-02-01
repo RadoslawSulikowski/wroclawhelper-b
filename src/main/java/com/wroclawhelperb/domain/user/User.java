@@ -27,16 +27,16 @@ public class User implements Locable {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "userName", unique = true)
+    @Column(name = "userName", unique = true, updatable = false, nullable = false)
     private String userName;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "schedulerOn")
+    @Column(name = "schedulerOn", nullable = false)
     private boolean schedulerOn;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

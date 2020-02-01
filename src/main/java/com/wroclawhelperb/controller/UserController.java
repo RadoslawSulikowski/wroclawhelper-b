@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/username/{username}")
-    public UserDtoFull getUserByUserName(@PathVariable(name = "username") String username) throws UserNotFoundException {
+    public UserDtoNoId getUserByUserName(@PathVariable(name = "username") String username) throws UserNotFoundException {
         return userService.getUserByUsername(username);
     }
 

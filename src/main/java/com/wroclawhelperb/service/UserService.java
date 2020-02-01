@@ -25,11 +25,11 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserDtoFull getUserByUsername(String username) throws UserNotFoundException {
+    public UserDtoNoId getUserByUsername(String username) throws UserNotFoundException {
         LOGGER.info("Searching for  user with id " + username + "...");
         if (userRepository.findByUserName(username).isPresent()) {
             LOGGER.info("Fetching user with id " + username + "...");
-            return userMapper.mapToUserDtoFull(userRepository.findByUserName(username).get());
+            return userMapper.mapToUserDtoNoId(userRepository.findByUserName(username).get());
         } else {
             LOGGER.error("There is no user with id " + username);
             throw new UserNotFoundException();

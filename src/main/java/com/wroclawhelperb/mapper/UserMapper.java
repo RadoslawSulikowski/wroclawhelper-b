@@ -34,6 +34,18 @@ public class UserMapper {
         );
     }
 
+    public UserDtoNoId mapToUserDtoNoId(User user) {
+        return new UserDtoNoId(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUserName(),
+                user.getPassword(),
+                user.getEmail(),
+                user.getLocation(),
+                user.isSchedulerOn()
+        );
+    }
+
     public User mapToUser(UserDtoNoId userDtoNoId) {
         return new User(
                 userDtoNoId.getFirstName(),

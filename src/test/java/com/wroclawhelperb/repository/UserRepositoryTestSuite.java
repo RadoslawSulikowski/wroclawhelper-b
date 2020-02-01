@@ -3,6 +3,7 @@ package com.wroclawhelperb.repository;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.encryptor.Encryptor;
+import com.wroclawhelperb.exception.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,10 +36,10 @@ class UserRepositoryTestSuite {
     }
 
     @Test
-    void testFindByUserName() {
+    void testFindByUserName() throws UserNotFoundException{
         //Given
         //When
-        User user = userRepository.findByUserName("a").get();
+        User user = userRepository.findByUserName("a").orElseThrow(UserNotFoundException::new);
         GPSLocation location = user.getLocation();
 
         //Then
