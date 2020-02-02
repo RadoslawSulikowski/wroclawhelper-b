@@ -33,6 +33,9 @@ dependencies {
     compile 'mysql:mysql-connector-java'
     runtimeOnly'com.h2database:h2'
     compile 'org.postgresql:postgresql:42.2.9'
+
+    compile 'org.springframework.boot:spring-boot-starter-mail:2.2.4.RELEASE'
+    
 }
 
 test {
