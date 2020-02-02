@@ -22,7 +22,7 @@ public class AllControllersExceptionHandler {
     }
 
     @ExceptionHandler(WeatherStationNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No station with given id")
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No Weather Station with given short name")
     public String weatherStationNotFoundExceptionHandler() {
         LOGGER.error("No such Weather Station");
         return "No such Weather Station";
