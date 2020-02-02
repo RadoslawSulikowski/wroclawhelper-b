@@ -40,7 +40,7 @@ public class EmailScheduler {
         this.statisticsRepository = statisticsRepository;
     }
 
-    @Scheduled(cron = "0 02 18 * * *")
+    @Scheduled(cron = "0 30 19 * * *")
     private void sendEmail() {
         LOGGER.info("Scheduler started...");
         int userCounter = 0;
@@ -49,7 +49,7 @@ public class EmailScheduler {
             userCounter++;
             if (user.isSchedulerOn()) {
                 try {
-                    emailService.send(new Mail(user.getEmail(), SUBJECT, prepareMessage(user)));
+                    emailService.send(prepareMail(user));
                     emailCounter++;
                 } catch(Exception e) {
                     LOGGER.error("Email to " + user.getUserName() + " not sent: " + e.getMessage(), e);
@@ -59,23 +59,25 @@ public class EmailScheduler {
         statisticsRepository.save(new EmailsSentStatistic(LocalDateTime.now(), userCounter, emailCounter));
     }
 
-    private String prepareMessage(User user) throws UserNotFoundException {
+    private Mail prepareMail(User user) throws UserNotFoundException {
         WeatherDtoNoId weather = weatherService.getWeatherOnNearestStation(user.getId());
-        String line1 = "\tGood morning, " + user.getFirstName() + "!\n";
-        String line2 = "Are you wondering what the weather is like outside the window?\n";
-        String line3 = "Luckily your scheduler on wroclawhelper is ON!\n\n";
-        String line4 = "The nearest Weather Station from location which your set in your profile is on:\n";
-        String line5 = weather.getWeatherStationName() + "\n\n";
-        String line6 = "The weather was updated " + weather.getMeasuringTime().toLocalDate() + " "
-                + weather.getMeasuringTime().toLocalTime() + "\n";
-        String line7 = "Wind:\t\t\t\t\t   " + weather.getWindSpeed() + "m/s " + weather.getStringWindDirection() + "\n";
-        String line8 = "Air temperature:\t\t\t" + weather.getAirTemperature() + "\u00B0C\n";
-        String line9 = "Ground temperature:\t\t  " + weather.getGroundTemperature() + "\u00B0C\n";
-        String line10 = "Precipitation type:\t\t\t" + weather.getEnglishPrecipitationType() + "\n";
-        String line11 = "Air humidity:\t\t\t\t  " + weather.getHumidity() + "%\n";
-
-        return String.format("%1$s%2$s%3$s%4$s%5$s%6$s%7$s%8$s%9$s%10$s%11$s%12$s",
-                line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, whatToGo(user, weather));
+        return new Mail.MailBuilder().sendTo(user.getEmail()).subject(SUBJECT)
+                .messegeLine("\tGood morning, " + user.getFirstName() + "!\n")
+                .messegeLine("Are you wondering what the weather is like outside the window?")
+                .messegeLine("Luckily your scheduler on wroclawhelper is ON!\n")
+                .messegeLine("The nearest Weather Station from location which your set in your profile is on:")
+                .messegeLine(weather.getWeatherStationName() + "\n")
+                .messegeLine("The weather was updated " + weather.getMeasuringTime().toLocalDate() + " "
+                        + weather.getMeasuringTime().toLocalTime())
+                .messegeLine("Wind:\t\t\t\t\t   " + weather.getWindSpeed() + "m/s " + weather.getStringWindDirection())
+                .messegeLine("Air temperature:\t\t\t" + weather.getAirTemperature() + "\u00B0C")
+                .messegeLine("Ground temperature:\t\t  " + weather.getGroundTemperature() + "\u00B0C")
+                .messegeLine("Precipitation type:\t\t\t" + weather.getEnglishPrecipitationType())
+                .messegeLine("Air humidity:\t\t\t\t  " + weather.getHumidity() + "%\n")
+                .messegeLine(whatToGo(user, weather))
+                .messegeLine("\nHave a nice day!")
+                .messegeLine("\t\tyour woclawhelper!")
+                .build();
     }
 
     private String whatToGo(User user, WeatherDtoNoId weather) throws UserNotFoundException {
@@ -100,7 +102,7 @@ public class EmailScheduler {
                     + car.getPlatesNumber() + ") from set location you can find on:";
             String line3 = car.getAddress() + " under coordinates: " + car.getLocation().getLatitude() + " "
                     + car.getLocation().getLongitude();
-            msg = String.format("%1$s %2$s\n%3$s\n%4$s", msg, line1, line2, line3);
+            return String.format("%1$s %2$s\n%3$s\n%4$s", msg, line1, line2, line3);
         } else {
             BikeStationDto bikeStation = bikeService.getNearestStationWithAvailableBike(user.getId());
             int availableBikes = bikeStation.getBikes() - bikeStation.getBookedBikes();
@@ -113,11 +115,7 @@ public class EmailScheduler {
             }
             String line3 = bikeStation.getName() + " under coordinates: " + bikeStation.getLocation().getLatitude()
                     + " " + bikeStation.getLocation().getLongitude();
-            msg = String.format("%1$s %2$s\n\n%3$s\n%4$s", msg, line1, line2, line3);
+            return String.format("%1$s %2$s\n\n%3$s\n%4$s", msg, line1, line2, line3);
         }
-        String line1 = "Have a nice day!";
-        String line2 = "your woclawhelper!";
-        msg = String.format("%1$s\n\n%2$s\t\t\n%3$s", msg, line1, line2);
-        return msg;
     }
 }
