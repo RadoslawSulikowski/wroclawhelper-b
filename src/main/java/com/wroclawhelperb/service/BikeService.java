@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class BikeService {
 
     private final UserRepository userRepository;
+    private final CSVMapper scvMapper = CSVMapper.getInstance();
 
     @Value("${bike.station.api.endpoint}")
     private String sourceUrl;
@@ -27,11 +28,11 @@ public class BikeService {
     }
 
     public List<BikeStationDto> getAllStations() {
-        return CSVMapper.mapToBikeStationList(sourceUrl);
+        return scvMapper.mapToBikeStationList(sourceUrl);
     }
 
     public BikeStationDto getStationById(Long stationId) throws BikeStationNotFoundException {
-        return CSVMapper.mapToBikeStationList(sourceUrl)
+        return scvMapper.mapToBikeStationList(sourceUrl)
                 .stream()
                 .filter(s -> s.getUniqueId().equals(stationId))
                 .findFirst()
@@ -39,7 +40,7 @@ public class BikeService {
     }
 
     private BikeStationDto getNearestStationWithAvailableBike(GPSLocation location) {
-        List<BikeStationDto> stationList = CSVMapper.mapToBikeStationList(sourceUrl)
+        List<BikeStationDto> stationList = scvMapper.mapToBikeStationList(sourceUrl)
                 .stream()
                 .filter(s -> !s.getBikeList().isEmpty())
                 .collect(Collectors.toList());

@@ -31,7 +31,9 @@ public class EmailScheduler {
     private final BikeService bikeService;
     private final EmailsSentStatisticsRepository statisticsRepository;
 
-    public EmailScheduler(EmailService emailService, UserRepository userRepository, WeatherService weatherService, VozillaService carService, BikeService bikeService, EmailsSentStatisticsRepository statisticsRepository) {
+    public EmailScheduler(EmailService emailService, UserRepository userRepository, WeatherService weatherService,
+                          VozillaService carService, BikeService bikeService,
+                          EmailsSentStatisticsRepository statisticsRepository) {
         this.emailService = emailService;
         this.userRepository = userRepository;
         this.weatherService = weatherService;

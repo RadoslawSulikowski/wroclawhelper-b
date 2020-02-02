@@ -22,8 +22,20 @@ import static java.lang.Long.parseLong;
 public class CSVMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVMapper.class);
+    private static CSVMapper csvMapperInstance = null;
 
-    public static List<WeatherDtoNoId> mapToWeatherList(URL url) {
+    public static CSVMapper getInstance() {
+        if (csvMapperInstance == null) {
+            csvMapperInstance = new CSVMapper();
+        }
+        return csvMapperInstance;
+    }
+
+    private CSVMapper() {
+
+    }
+
+    public List<WeatherDtoNoId> mapToWeatherList(URL url) {
         try {
             Scanner scanner = new Scanner(url.openStream(), "UTF-8");
 
@@ -53,7 +65,7 @@ public class CSVMapper {
         }
     }
 
-    public static List<WeatherDtoNoId> mapToWeatherList(String source) {
+    public List<WeatherDtoNoId> mapToWeatherList(String source) {
         try {
             URL url = new URL(source);
             return mapToWeatherList(url);
@@ -63,7 +75,7 @@ public class CSVMapper {
         }
     }
 
-    public static List<BikeStationDto> mapToBikeStationList(URL url) {
+    public List<BikeStationDto> mapToBikeStationList(URL url) {
         try {
             Scanner scanner = new Scanner(url.openStream(), "UTF-8");
             List<BikeStationDto> bikeStationList = new ArrayList<>();
@@ -113,7 +125,7 @@ public class CSVMapper {
         }
     }
 
-    public static List<BikeStationDto> mapToBikeStationList(String source) {
+    public List<BikeStationDto> mapToBikeStationList(String source) {
         try {
             URL url = new URL(source);
             return mapToBikeStationList(url);

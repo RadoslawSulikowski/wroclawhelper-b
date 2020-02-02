@@ -17,6 +17,8 @@ import java.util.List;
 
 @Service
 public class WeatherService {
+
+    private final CSVMapper csvMapper = CSVMapper.getInstance();
     private final WeatherMapper weatherMapper;
     private final UserRepository userRepository;
 
@@ -31,7 +33,7 @@ public class WeatherService {
 
 
     public List<WeatherDtoNoId> getWeatherOnAllStations() {
-        return CSVMapper.mapToWeatherList(sourceUrl);
+        return csvMapper.mapToWeatherList(sourceUrl);
     }
 
     public WeatherDtoNoId getWeatherOnStation(String stationId) throws WeatherStationNotFoundException {
