@@ -2,7 +2,6 @@ package com.wroclawhelperb.service;
 
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.User;
-import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.repository.UserRepository;
@@ -31,7 +30,7 @@ public class WeatherServiceTestSuite {
     public void testGetWeather() throws UserNotFoundException {
         //Given
         User user = new User("a", "a", "a", "a", "a",
-                new GPSLocation(51.138235, 16.973045, GPSLocation.USER_FAVORITE_LOCATION));
+                new GPSLocation(51.138235, 16.973045, GPSLocation.USER_FAVORITE_LOCATION), true);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         //When
         WeatherDtoNoId weather = weatherService.getWeatherOnNearestStation(1L);

@@ -2,7 +2,6 @@ package com.wroclawhelperb.domain.user;
 
 import com.wroclawhelperb.domain.Locable;
 import com.wroclawhelperb.domain.location.GPSLocation;
-import com.wroclawhelperb.encryptor.Encryptor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,26 +26,31 @@ public class User implements Locable {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "userName")
+    @Column(name = "userName", unique = true, updatable = false, nullable = false)
     private String userName;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "schedulerOn", nullable = false)
+    private boolean schedulerOn;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "locationId")
     private GPSLocation location;
 
 
-    public User(String firstName, String lastName, String userName, String password, String email, GPSLocation location) {
+    public User(String firstName, String lastName, String userName, String password,
+                String email, GPSLocation location, boolean schedulerOn) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
-        this.password = Encryptor.encrypt(password);
+        this.password = password;
         this.email = email;
         this.location = location;
+        this.schedulerOn = schedulerOn;
     }
 }

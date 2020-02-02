@@ -79,5 +79,42 @@ public class GPSLocation {
                 ", longitude=" + longitude +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        GPSLocation location = (GPSLocation) o;
+
+        if (Double.compare(location.latitude, latitude) != 0) {
+            return false;
+        }
+        if (Double.compare(location.longitude, longitude) != 0) {
+            return false;
+        }
+        if (id != null ? !id.equals(location.id) : location.id != null) {
+            return false;
+        }
+        return locationType != null ? locationType.equals(location.locationType) : location.locationType == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (locationType != null ? locationType.hashCode() : 0);
+        temp = Double.doubleToLongBits(latitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }
 

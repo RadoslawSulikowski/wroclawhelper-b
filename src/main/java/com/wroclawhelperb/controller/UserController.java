@@ -1,14 +1,16 @@
 package com.wroclawhelperb.controller;
 
-import com.wroclawhelperb.domain.user.UserDtoFull;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
+import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -31,14 +33,30 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/id/{userId}")
     public UserDtoNoPassword getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
-        return userService.getUser(id);
+        return userService.getUserById(id);
+    }
+
+    @GetMapping(value = "/username/{username}")
+    public UserDtoNoId getUserByUserName(@PathVariable(name = "username") String username) throws UserNotFoundException {
+        return userService.getUserByUsername(username);
+    }
+
+    @GetMapping(value = "/verify")
+    public boolean verifyUser(@RequestBody UserDtoUsernamePassword user) throws UserNotFoundException {
+        return userService.verifyUser(user);
     }
 
     @PutMapping
-    public UserDtoNoPassword updateUser(@RequestBody UserDtoFull userDto) throws UserNotFoundException {
+    public UserDtoNoId updateUser(@RequestBody UserDtoNoId userDto) throws UserNotFoundException {
         return userService.updateUser(userDto);
+    }
+
+    @PatchMapping
+    public UserDtoNoId updateUserProperty(@RequestBody Map<String, String> propertyValueMap)
+            throws UserNotFoundException, NoUsernameInMapException {
+        return userService.updateUserProperty(propertyValueMap);
     }
 
     @DeleteMapping(value = "/{userId}")

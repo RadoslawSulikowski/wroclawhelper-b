@@ -63,6 +63,7 @@ public class Weather implements Locable {
         return weatherStation.getLocation();
     }
 
+
     @Override
     public String toString() {
         return "Weather{" +

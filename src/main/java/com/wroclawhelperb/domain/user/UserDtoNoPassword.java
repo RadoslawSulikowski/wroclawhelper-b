@@ -16,5 +16,6 @@ public class UserDtoNoPassword {
     private String userName;
     private String email;
     private GPSLocation location;
+    private boolean schedulerOn;
 
 }

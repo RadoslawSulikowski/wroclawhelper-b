@@ -65,7 +65,7 @@ public class VozillaService {
     private VozillaCarDto getNearestAvailableCar(GPSLocation location) {
         return (VozillaCarDto) location.findNearest(getVozillaCarList()
                 .stream()
-                .filter(c -> c.getStatus().equals("AVAILABLE "))
+                .filter(c -> c.getStatus().equals("AVAILABLE"))
                 .collect(Collectors.toList()));
     }
 
