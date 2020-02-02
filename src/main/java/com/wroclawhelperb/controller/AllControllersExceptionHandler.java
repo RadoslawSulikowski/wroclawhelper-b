@@ -1,10 +1,7 @@
 package com.wroclawhelperb.controller;
 
 
-import com.wroclawhelperb.exception.BikeStationNotFoundException;
-import com.wroclawhelperb.exception.CarNotFoundException;
-import com.wroclawhelperb.exception.UserNotFoundException;
-import com.wroclawhelperb.exception.WeatherStationNotFoundException;
+import com.wroclawhelperb.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -43,5 +40,12 @@ public class AllControllersExceptionHandler {
     public String carNotFoundExceptionHandler() {
         LOGGER.error("No car with given plates number");
         return "No car with given plates number";
+    }
+
+    @ExceptionHandler(NoUsernameInMapException.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "Username not found in received data")
+    public String noUsernameInMapExceptionHandler() {
+        LOGGER.error("Username not found in received data");
+        return "Username not found in received data";
     }
 }

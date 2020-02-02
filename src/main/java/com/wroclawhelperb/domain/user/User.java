@@ -2,7 +2,6 @@ package com.wroclawhelperb.domain.user;
 
 import com.wroclawhelperb.domain.Locable;
 import com.wroclawhelperb.domain.location.GPSLocation;
-import com.wroclawhelperb.encryptor.Encryptor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -49,7 +48,7 @@ public class User implements Locable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
-        this.password = Encryptor.encrypt(password);
+        this.password = password;
         this.email = email;
         this.location = location;
         this.schedulerOn = schedulerOn;

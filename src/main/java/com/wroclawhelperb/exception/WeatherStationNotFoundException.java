@@ -5,8 +5,4 @@ public class WeatherStationNotFoundException extends Exception {
     public WeatherStationNotFoundException() {
         super();
     }
-
-    public WeatherStationNotFoundException(String message) {
-        super(message);
-    }
 }

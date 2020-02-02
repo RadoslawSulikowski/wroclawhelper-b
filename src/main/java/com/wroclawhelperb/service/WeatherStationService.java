@@ -23,10 +23,10 @@ public class WeatherStationService {
         List<WeatherStationDto> stations = new ArrayList<>();
         weatherStationRepository.findAll()
                 .forEach(s -> {
-            if (!s.getShortName().equals("UNKNOWN")) {
-                stations.add(weatherStationMapper.mapToWeatherStationDto(s));
-            }
-        });
+                    if (!s.getShortName().equals("UNKNOWN")) {
+                        stations.add(weatherStationMapper.mapToWeatherStationDto(s));
+                    }
+                });
         return stations;
     }
 

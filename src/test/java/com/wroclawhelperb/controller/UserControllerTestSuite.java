@@ -2,10 +2,10 @@ package com.wroclawhelperb.controller;
 
 import com.google.gson.Gson;
 import com.wroclawhelperb.domain.location.GPSLocation;
-import com.wroclawhelperb.domain.user.UserDtoFull;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
+import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -190,8 +192,8 @@ class UserControllerTestSuite {
     @Test
     void shouldHandleUserNotFoundExceptionUpdateUser() throws Exception {
         //Given
-        UserDtoFull userDto = new UserDtoFull();
-        when(service.updateUser(any(UserDtoFull.class))).thenThrow(UserNotFoundException.class);
+        UserDtoNoId userDto = new UserDtoNoId();
+        when(service.updateUser(any(UserDtoNoId.class))).thenThrow(UserNotFoundException.class);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
 
@@ -206,8 +208,7 @@ class UserControllerTestSuite {
     @Test
     void shouldUpdateUser() throws Exception {
         //Given
-        UserDtoFull userDto = new UserDtoFull(
-                1L,
+        UserDtoNoId userDto = new UserDtoNoId(
                 "fName",
                 "lName",
                 "uName",
@@ -215,15 +216,7 @@ class UserControllerTestSuite {
                 "mail",
                 new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
                 true);
-        UserDtoNoPassword userDtoNoPassword = new UserDtoNoPassword(
-                1L,
-                "fName",
-                "lName",
-                "uName",
-                "mail",
-                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
-                true);
-        when(service.updateUser(any(UserDtoFull.class))).thenReturn(userDtoNoPassword);
+        when(service.updateUser(any(UserDtoNoId.class))).thenReturn(userDto);
 
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
@@ -234,11 +227,11 @@ class UserControllerTestSuite {
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstName", is("fName")))
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))
                 .andExpect(jsonPath("$.email", is("mail")))
+                .andExpect(jsonPath("$.password", is("pass")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
                 .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))
@@ -270,7 +263,7 @@ class UserControllerTestSuite {
     }
 
     @Test
-    void shouldReturnFalse() throws Exception {
+    void shouldReturnVerifyFalse() throws Exception {
         //Given
         when(service.verifyUser(any(UserDtoUsernamePassword.class))).thenReturn(false);
         UserDtoUsernamePassword user = new UserDtoUsernamePassword("username", "password");
@@ -287,7 +280,7 @@ class UserControllerTestSuite {
     }
 
     @Test
-    void shouldReturnTrue() throws Exception {
+    void shouldVerifyReturnTrue() throws Exception {
         //Given
         when(service.verifyUser(any(UserDtoUsernamePassword.class))).thenReturn(true);
         UserDtoUsernamePassword user = new UserDtoUsernamePassword("username", "password");
@@ -302,5 +295,79 @@ class UserControllerTestSuite {
                 .andExpect(status().is(200))
                 .andExpect(content().contentType("application/json"))
                 .andExpect(content().string("true"));
+    }
+
+
+    @Test
+    void shouldUpdateUserPropertyThrowNoUsernameInMapException() throws Exception {
+        //Given
+        Map<String, String> map = new HashMap<>();
+        map.put("someKey", "someValue");
+        map.put("someOtherKey", "someOtherValue");
+        when(service.updateUserProperty(anyMap())).thenThrow(NoUsernameInMapException.class);
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(map);
+
+        //When & Then
+        mockMvc.perform(patch("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().is(422))
+                .andExpect(status().reason("Username not found in received data"));
+    }
+
+    @Test
+    void shouldUpdateUserPropertyHandleUserNotFoundException() throws Exception {
+        //Given
+        Map<String, String> map = new HashMap<>();
+        map.put("username", "someValue");
+        map.put("someOtherKey", "someOtherValue");
+        when(service.updateUserProperty(anyMap())).thenThrow(UserNotFoundException.class);
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(map);
+
+        //When & Then
+        mockMvc.perform(patch("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().is(404))
+                .andExpect(status().reason("No user with given id"));
+    }
+
+    @Test
+    void shouldUpdateUserPropertyReturnUpdatedUser() throws Exception {
+        //Given
+        UserDtoNoId userDto = new UserDtoNoId(
+                "fName",
+                "lName",
+                "uName",
+                "pass",
+                "mail",
+                new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
+                true);
+        Map<String, String> map = new HashMap<>();
+        map.put("username", "someValue");
+        map.put("someOtherKey", "someOtherValue");
+        when(service.updateUserProperty(anyMap())).thenReturn(userDto);
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(map);
+
+        //When & Then
+        mockMvc.perform(patch("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.firstName", is("fName")))
+                .andExpect(jsonPath("$.lastName", is("lName")))
+                .andExpect(jsonPath("$.userName", is("uName")))
+                .andExpect(jsonPath("$.email", is("mail")))
+                .andExpect(jsonPath("$.password", is("pass")))
+                .andExpect(jsonPath("$.location.latitude", is(2.0)))
+                .andExpect(jsonPath("$.location.longitude", is(3.0)))
+                .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))
+                .andExpect(jsonPath("$.schedulerOn", is(true)));
     }
 }

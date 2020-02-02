@@ -16,6 +16,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VozillaCarDtoList {
 
-        @JsonProperty("objects")
-        private List<VozillaCarDto> cars;
+    @JsonProperty("objects")
+    private List<VozillaCarDto> cars;
 }
