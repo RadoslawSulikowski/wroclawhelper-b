@@ -1,6 +1,7 @@
 package com.wroclawhelperb.service;
 
 import com.wroclawhelperb.domain.statistics.LoginAttemptsStatistic;
+import com.wroclawhelperb.domain.statistics.RegistrationArchive;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
@@ -9,6 +10,7 @@ import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.mapper.UserMapper;
 import com.wroclawhelperb.repository.LoginAttemptsStatisticsRepository;
+import com.wroclawhelperb.repository.RegistrationArchiveRepository;
 import com.wroclawhelperb.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +30,17 @@ public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
-    private final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository;
     private final UserMapper userMapper;
+    private final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository;
+    private final RegistrationArchiveRepository registrationArchiveRepository;
 
     public UserService(final UserRepository userRepository, final UserMapper userMapper,
-                       final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository) {
+                       final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository,
+                       final RegistrationArchiveRepository registrationArchiveRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.loginAttemptsStatisticsRepository = loginAttemptsStatisticsRepository;
+        this.registrationArchiveRepository = registrationArchiveRepository;
     }
 
     public UserDtoNoId getUserByUsername(String username) throws UserNotFoundException {
@@ -70,6 +75,7 @@ public class UserService {
     public Long addUser(UserDtoNoId userDto) {
         User user = userRepository.save(userMapper.mapToUser(userDto));
         LOGGER.info("User correctly stored with id: " + user.getId() + ".");
+        registrationArchiveRepository.save(new RegistrationArchive(LocalDateTime.now(), user.getUserName()));
         return user.getId();
     }
 
