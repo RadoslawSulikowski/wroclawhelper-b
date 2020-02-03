@@ -73,7 +73,7 @@ class WeatherStationControllerTestSuite {
         //Given
         WeatherStationDto station = new WeatherStationDto("shortName", "name",
                 new GPSLocation(1.0, 1.5));
-        doNothing().when(service).addNewWeatherStation(any(WeatherStationDto.class));
+        when(service.addNewWeatherStation(any(WeatherStationDto.class))).thenReturn(station);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(station);
 
@@ -87,11 +87,10 @@ class WeatherStationControllerTestSuite {
     }
 
     @Test
-    void shouldHandleWeatherStationNotFoundException() throws Exception {
+    void shouldHandleWeatherStationNotFoundExceptionUpdateStation() throws Exception {
         //Given
         WeatherStationDto station = new WeatherStationDto("shortName", "name",
                 new GPSLocation(1.0, 1.5));
-        doNothing().when(service).addNewWeatherStation(any(WeatherStationDto.class));
         Gson gson = new Gson();
         String jsonContent = gson.toJson(station);
         when(service.updateStation(any(WeatherStationDto.class))).thenThrow(new WeatherStationNotFoundException());
@@ -110,13 +109,13 @@ class WeatherStationControllerTestSuite {
         //Given
         WeatherStationDto station = new WeatherStationDto("shortName", "name",
                 new GPSLocation(1.0, 1.5));
-        doNothing().when(service).addNewWeatherStation(any(WeatherStationDto.class));
         Gson gson = new Gson();
         String jsonContent = gson.toJson(station);
         when(service.updateStation(any(WeatherStationDto.class))).thenReturn(station);
 
         //When & Then
-        mockMvc.perform(put("/weatherstations").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/weatherstations")
+                .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().is(200))

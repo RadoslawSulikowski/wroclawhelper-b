@@ -1,7 +1,6 @@
 package com.wroclawhelperb.controller;
 
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
-import com.wroclawhelperb.exception.BikeStationNotFoundException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import com.wroclawhelperb.service.WeatherStationService;
 import org.springframework.http.HttpStatus;
@@ -26,8 +25,8 @@ public class WeatherStationController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED, reason = "Weather station successful added")
-    public void addNewWeatherStation(@RequestBody WeatherStationDto station) {
-        weatherStationService.addNewWeatherStation(station);
+    public WeatherStationDto addNewWeatherStation(@RequestBody WeatherStationDto station) {
+        return weatherStationService.addNewWeatherStation(station);
     }
 
     @PutMapping

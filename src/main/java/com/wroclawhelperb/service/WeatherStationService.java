@@ -2,7 +2,6 @@ package com.wroclawhelperb.service;
 
 import com.wroclawhelperb.domain.weather.WeatherStation;
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
-import com.wroclawhelperb.exception.BikeStationNotFoundException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import com.wroclawhelperb.mapper.WeatherStationMapper;
 import com.wroclawhelperb.repository.WeatherStationRepository;
@@ -33,8 +32,9 @@ public class WeatherStationService {
         return stations;
     }
 
-    public void addNewWeatherStation(WeatherStationDto station) {
-        weatherStationRepository.save(weatherStationMapper.mapToWeatherStation(station));
+    public WeatherStationDto addNewWeatherStation(WeatherStationDto station) {
+        return weatherStationMapper.mapToWeatherStationDto(
+                weatherStationRepository.save(weatherStationMapper.mapToWeatherStation(station)));
     }
 
     public WeatherStationDto updateStation(WeatherStationDto station) throws WeatherStationNotFoundException {
