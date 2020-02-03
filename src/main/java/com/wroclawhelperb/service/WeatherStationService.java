@@ -2,6 +2,7 @@ package com.wroclawhelperb.service;
 
 import com.wroclawhelperb.domain.weather.WeatherStation;
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
+import com.wroclawhelperb.exception.NoStationIdInMapException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import com.wroclawhelperb.mapper.WeatherStationMapper;
 import com.wroclawhelperb.repository.WeatherStationRepository;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static java.lang.Double.parseDouble;
 
 @Service
 public class WeatherStationService {
@@ -45,5 +49,26 @@ public class WeatherStationService {
         weatherStation.getLocation().setLongitude(station.getLocation().getLongitude());
         return weatherStationMapper.mapToWeatherStationDto(
                 weatherStationRepository.save(weatherStation));
+    }
+
+    public WeatherStationDto updateStationProperty(Map<String, String> propertyNameValueMap)
+            throws WeatherStationNotFoundException, NoStationIdInMapException {
+        String stationId = propertyNameValueMap.entrySet()
+                .stream()
+                .filter(e -> e.getKey().equals("shortName"))
+                .findFirst().orElseThrow(NoStationIdInMapException::new).getValue();
+        WeatherStation station = weatherStationRepository.findById(stationId).orElseThrow(WeatherStationNotFoundException::new);
+        for (Map.Entry<String, String> e : propertyNameValueMap.entrySet()) {
+            if (e.getKey().equals("name")) {
+                station.setName(e.getValue());
+            }
+            if (e.getKey().equals("latitude")) {
+                station.getLocation().setLatitude(parseDouble(e.getValue()));
+            }
+            if (e.getKey().equals("longitude")) {
+                station.getLocation().setLongitude(parseDouble(e.getValue()));
+            }
+        }
+        return weatherStationMapper.mapToWeatherStationDto(weatherStationRepository.save(station));
     }
 }

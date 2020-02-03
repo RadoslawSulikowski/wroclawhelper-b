@@ -1,12 +1,14 @@
 package com.wroclawhelperb.controller;
 
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
+import com.wroclawhelperb.exception.NoStationIdInMapException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import com.wroclawhelperb.service.WeatherStationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/weatherstations")
@@ -32,5 +34,11 @@ public class WeatherStationController {
     @PutMapping
     public WeatherStationDto updateStation(@RequestBody WeatherStationDto station) throws WeatherStationNotFoundException {
         return weatherStationService.updateStation(station);
+    }
+
+    @PatchMapping
+    public WeatherStationDto updateStationProperty(@RequestBody Map<String, String> propertyNameValueMap)
+            throws WeatherStationNotFoundException, NoStationIdInMapException {
+        return weatherStationService.updateStationProperty(propertyNameValueMap);
     }
 }

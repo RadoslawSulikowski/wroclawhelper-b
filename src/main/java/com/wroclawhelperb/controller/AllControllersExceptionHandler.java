@@ -48,4 +48,11 @@ public class AllControllersExceptionHandler {
         LOGGER.error("Username not found in received data");
         return "Username not found in received data";
     }
+
+    @ExceptionHandler(NoStationIdInMapException.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "Station short name not found in received data")
+    public String noStationIdInMapExceptionHandler() {
+        LOGGER.error("Station short name not found in received data");
+        return "Station short name not found in received data";
+    }
 }

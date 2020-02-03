@@ -3,6 +3,7 @@ package com.wroclawhelperb.service;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.weather.WeatherStation;
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
+import com.wroclawhelperb.exception.NoStationIdInMapException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
 import com.wroclawhelperb.mapper.WeatherStationMapper;
 import com.wroclawhelperb.repository.WeatherStationRepository;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.wroclawhelperb.domain.location.GPSLocation.WEATHER_STATION_LOCATION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +38,7 @@ class WeatherStationServiceTestSuite {
     private WeatherStationRepository repository;
 
     @Test
-    void shouldReturnStationList() {
+    void shouldGetWeatherStationsReturnStationList() {
         //Given
 
         WeatherStation station = new WeatherStation(TEST_SHORT_NAME, TEST_NAME, LOCATION);
@@ -71,7 +69,7 @@ class WeatherStationServiceTestSuite {
     }
 
     @Test
-    void shouldFilterUnknownAndFetchEmptyList() {
+    void shouldGetWeatherStationsFilterUnknownAndFetchEmptyList() {
         //Given
         WeatherStation station = new WeatherStation("UNKNOWN", TEST_NAME, LOCATION);
         List<WeatherStation> stations = new ArrayList<>();
@@ -88,7 +86,7 @@ class WeatherStationServiceTestSuite {
     }
 
     @Test
-    void shouldFetchEmptyList() {
+    void shouldGetWeatherStationsFetchEmptyList() {
         //Given
         when(repository.findAll()).thenReturn(new ArrayList<>());
 
@@ -100,7 +98,7 @@ class WeatherStationServiceTestSuite {
     }
 
     @Test
-    void shouldReturnSavedStation() {
+    void shouldAddNewWeatherStationReturnSavedStation() {
         //Given
         WeatherStation station = new WeatherStation(TEST_SHORT_NAME, TEST_NAME, LOCATION);
         WeatherStationDto stationDto = new WeatherStationDto(TEST_SHORT_NAME, TEST_NAME, LOCATION);
@@ -116,7 +114,7 @@ class WeatherStationServiceTestSuite {
     }
 
     @Test
-    void shouldReturnUpdatedStation() throws WeatherStationNotFoundException {
+    void shouldUpdateStationReturnUpdatedStation() throws WeatherStationNotFoundException {
         //Given
         WeatherStation stationToUpdate = new WeatherStation(TEST_SHORT_NAME, "", new GPSLocation());
         WeatherStation station = new WeatherStation(TEST_SHORT_NAME, TEST_NAME, LOCATION);
@@ -133,13 +131,57 @@ class WeatherStationServiceTestSuite {
     }
 
     @Test
-    void shouldThrowWeatherStationNotFoundException() {
+    void shouldUpdateStationThrowWeatherStationNotFoundException() {
         //Given
         WeatherStationDto stationDto = new WeatherStationDto(TEST_SHORT_NAME, TEST_NAME, LOCATION);
         when(repository.findById(anyString())).thenReturn(Optional.empty());
 
         //When & Then
         assertThrows(WeatherStationNotFoundException.class, () -> service.updateStation(stationDto));
+    }
+
+    @Test
+    void shouldUpdateStationPropertyThrowNoStationIdInMapException() {
+        //Given
+        Map<String, String> map = new HashMap<>();
+        map.put("someKey", "someValue");
+        map.put("someOtherKey", "someOtherValue");
+
+        //When & Then
+        assertThrows(NoStationIdInMapException.class, () -> service.updateStationProperty(map));
+    }
+
+    @Test
+    void shouldUpdateStationPropertyThrowWeatherStationNotFoundException() {
+        //Given
+        Map<String, String> map = new HashMap<>();
+        map.put("shortName", "someValue");
+        map.put("someOtherKey", "someOtherValue");
+        when(repository.findById("someValue")).thenReturn(Optional.empty());
+
+        //When & Then
+        assertThrows(WeatherStationNotFoundException.class, () -> service.updateStationProperty(map));
+    }
+
+    @Test
+    void shouldUpdateStationPropertyReturnUpdatedStation()
+            throws WeatherStationNotFoundException, NoStationIdInMapException{
+        //Given
+        WeatherStation stationToUpdate = new WeatherStation("someValue", "", new GPSLocation());
+        when(repository.findById("someValue")).thenReturn(Optional.of(stationToUpdate));
+        Map<String, String> map = new HashMap<>();
+        map.put("shortName", "someValue");
+        map.put("name", "updatedName");
+        WeatherStation station = new WeatherStation("someValue", "updatedName", LOCATION);
+        WeatherStationDto updatedStation = new WeatherStationDto("someValue", "updatedName", LOCATION);
+        when(mapper.mapToWeatherStationDto(station)).thenReturn(updatedStation);
+        when(repository.save(any(WeatherStation.class))).thenReturn(station);
+
+        //When
+        WeatherStationDto returnedStation = service.updateStationProperty(map);
+
+        //Then
+        assertEquals(updatedStation,returnedStation);
     }
 
 }
