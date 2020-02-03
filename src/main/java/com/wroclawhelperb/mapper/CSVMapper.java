@@ -42,8 +42,7 @@ public class CSVMapper {
                             parseDouble(line[5]),
                             parseDouble(line[6]),
                             line[7],
-                            nameToShortName(line[8])
-                    ));
+                            nameToShortName(line[8])));
                 }
                 lineCounter++;
             }
@@ -75,7 +74,6 @@ public class CSVMapper {
                 String line = scanner.nextLine();
 
                 if (lineCounter > 0) {
-
                     List<Integer> bikeList = new ArrayList<>();
                     String[] lineArr, line0Arr, line1Arr, bikesArr;
 

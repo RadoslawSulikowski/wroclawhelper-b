@@ -188,7 +188,7 @@ class WeatherStationServiceTestSuite {
     void shouldUpdateStationPropertyLatitudeReturnUpdatedStation()
             throws WeatherStationNotFoundException, NoStationIdInMapException {
         //Given
-        GPSLocation updatedLocation = new GPSLocation( 53.5, 1.5, WEATHER_STATION_LOCATION);
+        GPSLocation updatedLocation = new GPSLocation(53.5, 1.5, WEATHER_STATION_LOCATION);
         WeatherStation stationToUpdate = new WeatherStation("someValue", "", new GPSLocation());
         when(repository.findById("someValue")).thenReturn(Optional.of(stationToUpdate));
         Map<String, String> map = new HashMap<>();
@@ -205,11 +205,12 @@ class WeatherStationServiceTestSuite {
         //Then
         assertEquals(updatedStation, returnedStation);
     }
+
     @Test
     void shouldUpdateStationPropertyLongitudeReturnUpdatedStation()
             throws WeatherStationNotFoundException, NoStationIdInMapException {
         //Given
-        GPSLocation updatedLocation = new GPSLocation( 1.0, 17.5, WEATHER_STATION_LOCATION);
+        GPSLocation updatedLocation = new GPSLocation(1.0, 17.5, WEATHER_STATION_LOCATION);
         WeatherStation stationToUpdate = new WeatherStation("someValue", "", new GPSLocation());
         when(repository.findById("someValue")).thenReturn(Optional.of(stationToUpdate));
         Map<String, String> map = new HashMap<>();
