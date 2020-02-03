@@ -164,7 +164,7 @@ class WeatherStationServiceTestSuite {
     }
 
     @Test
-    void shouldUpdateStationPropertyReturnUpdatedStation()
+    void shouldUpdateStationPropertyNameReturnUpdatedStation()
             throws WeatherStationNotFoundException, NoStationIdInMapException {
         //Given
         WeatherStation stationToUpdate = new WeatherStation("someValue", "", new GPSLocation());
@@ -174,6 +174,49 @@ class WeatherStationServiceTestSuite {
         map.put("name", "updatedName");
         WeatherStation station = new WeatherStation("someValue", "updatedName", LOCATION);
         WeatherStationDto updatedStation = new WeatherStationDto("someValue", "updatedName", LOCATION);
+        when(mapper.mapToWeatherStationDto(station)).thenReturn(updatedStation);
+        when(repository.save(any(WeatherStation.class))).thenReturn(station);
+
+        //When
+        WeatherStationDto returnedStation = service.updateStationProperty(map);
+
+        //Then
+        assertEquals(updatedStation, returnedStation);
+    }
+
+    @Test
+    void shouldUpdateStationPropertyLatitudeReturnUpdatedStation()
+            throws WeatherStationNotFoundException, NoStationIdInMapException {
+        //Given
+        GPSLocation updatedLocation = new GPSLocation( 53.5, 1.5, WEATHER_STATION_LOCATION);
+        WeatherStation stationToUpdate = new WeatherStation("someValue", "", new GPSLocation());
+        when(repository.findById("someValue")).thenReturn(Optional.of(stationToUpdate));
+        Map<String, String> map = new HashMap<>();
+        map.put("shortName", "someValue");
+        map.put("latitude", "53.5");
+        WeatherStation station = new WeatherStation("someValue", "", updatedLocation);
+        WeatherStationDto updatedStation = new WeatherStationDto("someValue", "", updatedLocation);
+        when(mapper.mapToWeatherStationDto(station)).thenReturn(updatedStation);
+        when(repository.save(any(WeatherStation.class))).thenReturn(station);
+
+        //When
+        WeatherStationDto returnedStation = service.updateStationProperty(map);
+
+        //Then
+        assertEquals(updatedStation, returnedStation);
+    }
+    @Test
+    void shouldUpdateStationPropertyLongitudeReturnUpdatedStation()
+            throws WeatherStationNotFoundException, NoStationIdInMapException {
+        //Given
+        GPSLocation updatedLocation = new GPSLocation( 1.0, 17.5, WEATHER_STATION_LOCATION);
+        WeatherStation stationToUpdate = new WeatherStation("someValue", "", new GPSLocation());
+        when(repository.findById("someValue")).thenReturn(Optional.of(stationToUpdate));
+        Map<String, String> map = new HashMap<>();
+        map.put("shortName", "someValue");
+        map.put("longitude", "17.5");
+        WeatherStation station = new WeatherStation("someValue", "", updatedLocation);
+        WeatherStationDto updatedStation = new WeatherStationDto("someValue", "", updatedLocation);
         when(mapper.mapToWeatherStationDto(station)).thenReturn(updatedStation);
         when(repository.save(any(WeatherStation.class))).thenReturn(station);
 

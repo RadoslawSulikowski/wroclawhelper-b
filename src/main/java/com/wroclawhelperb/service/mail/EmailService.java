@@ -2,6 +2,7 @@ package com.wroclawhelperb.service.mail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,10 +15,19 @@ public class EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleMailMessage.class);
 
-    private final JavaMailSender javaMailSender;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
-    public EmailService(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
+    private static EmailService emailServiceInstance = null;
+
+    public static EmailService getInstance() {
+        if (emailServiceInstance == null) {
+            emailServiceInstance = new EmailService();
+        }
+        return emailServiceInstance;
+    }
+
+    private EmailService() {
     }
 
     private MimeMessagePreparator createMimeMessage(final Mail mail) {

@@ -7,6 +7,8 @@ import com.wroclawhelperb.domain.bike.BikeStationDto;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,9 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 class CSVMapperTestSuite {
 
-    private CSVMapper csvMapper = CSVMapper.getInstance();
+    @Autowired
+    private CSVMapper csvMapper;
 
     private List<ILoggingEvent> prepareLogList() {
         Logger csvMapperLogger = (Logger) LoggerFactory.getLogger(CSVMapper.class);
