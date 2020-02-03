@@ -297,7 +297,6 @@ class UserControllerTestSuite {
                 .andExpect(content().string("true"));
     }
 
-
     @Test
     void shouldUpdateUserPropertyThrowNoUsernameInMapException() throws Exception {
         //Given

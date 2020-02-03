@@ -22,7 +22,7 @@ public class AllControllersExceptionHandler {
     }
 
     @ExceptionHandler(WeatherStationNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No station with given id")
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No Weather Station with given short name")
     public String weatherStationNotFoundExceptionHandler() {
         LOGGER.error("No such Weather Station");
         return "No such Weather Station";
@@ -47,5 +47,12 @@ public class AllControllersExceptionHandler {
     public String noUsernameInMapExceptionHandler() {
         LOGGER.error("Username not found in received data");
         return "Username not found in received data";
+    }
+
+    @ExceptionHandler(NoStationIdInMapException.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "Station short name not found in received data")
+    public String noStationIdInMapExceptionHandler() {
+        LOGGER.error("Station short name not found in received data");
+        return "Station short name not found in received data";
     }
 }

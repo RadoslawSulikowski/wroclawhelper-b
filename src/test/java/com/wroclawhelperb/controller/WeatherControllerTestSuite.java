@@ -85,7 +85,7 @@ class WeatherControllerTestSuite {
         mockMvc.perform(get("/weather/STATION_NAME")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(404))
-                .andExpect(status().reason("No station with given id"));
+                .andExpect(status().reason("No Weather Station with given short name"));
     }
 
     @Test
