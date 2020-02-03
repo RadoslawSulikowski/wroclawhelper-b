@@ -165,7 +165,7 @@ class WeatherStationServiceTestSuite {
 
     @Test
     void shouldUpdateStationPropertyReturnUpdatedStation()
-            throws WeatherStationNotFoundException, NoStationIdInMapException{
+            throws WeatherStationNotFoundException, NoStationIdInMapException {
         //Given
         WeatherStation stationToUpdate = new WeatherStation("someValue", "", new GPSLocation());
         when(repository.findById("someValue")).thenReturn(Optional.of(stationToUpdate));
@@ -181,7 +181,7 @@ class WeatherStationServiceTestSuite {
         WeatherStationDto returnedStation = service.updateStationProperty(map);
 
         //Then
-        assertEquals(updatedStation,returnedStation);
+        assertEquals(updatedStation, returnedStation);
     }
 
 }

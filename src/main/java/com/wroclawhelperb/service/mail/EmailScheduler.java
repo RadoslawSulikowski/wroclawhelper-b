@@ -42,7 +42,7 @@ public class EmailScheduler {
         this.statisticsRepository = statisticsRepository;
     }
 
-    @Scheduled(cron = "0 30 19 * * *")
+    @Scheduled(cron = "0 00 07 * * *")
     private void sendEmail() {
         LOGGER.info("Scheduler started...");
         int userCounter = 0;
@@ -61,7 +61,7 @@ public class EmailScheduler {
         statisticsRepository.save(new EmailsSentStatistic(LocalDateTime.now(), userCounter, emailCounter));
     }
 
-    private Mail prepareMail(User user) throws UserNotFoundException {
+    public Mail prepareMail(User user) throws UserNotFoundException {
         WeatherDtoNoId weather = weatherService.getWeatherOnNearestStation(user.getId());
         return new Mail.MailBuilder().sendTo(user.getEmail()).subject(SUBJECT)
                 .messageLine("\tGood morning, " + user.getFirstName() + "!\n")
@@ -82,7 +82,7 @@ public class EmailScheduler {
                 .build();
     }
 
-    private String whatToGo(User user, WeatherDtoNoId weather) throws UserNotFoundException {
+    public String whatToGo(User user, WeatherDtoNoId weather) throws UserNotFoundException {
         boolean goByCar = false;
         String msg = "\tToday";
         if (weather.getWindSpeed() >= 8) {
