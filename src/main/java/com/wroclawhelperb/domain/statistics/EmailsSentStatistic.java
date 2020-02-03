@@ -1,4 +1,4 @@
-package com.wroclawhelperb.domain.email.counter;
+package com.wroclawhelperb.domain.statistics;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
