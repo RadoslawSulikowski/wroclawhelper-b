@@ -1,7 +1,7 @@
 package com.wroclawhelperb.controller;
 
 import com.wroclawhelperb.domain.user.UserDtoNoId;
-import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.UserDtoNoIdNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
@@ -29,32 +29,32 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDtoNoPassword> getAllUsers() {
+    public List<UserDtoNoIdNoPassword> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping(value = "/id/{userId}")
-    public UserDtoNoId getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
+    public UserDtoNoIdNoPassword getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
         return userService.getUserById(id);
     }
 
     @GetMapping(value = "/username/{username}")
-    public UserDtoNoId getUserByUserName(@PathVariable(name = "username") String username) throws UserNotFoundException {
+    public UserDtoNoIdNoPassword getUserByUserName(@PathVariable(name = "username") String username) throws UserNotFoundException {
         return userService.getUserByUsername(username);
     }
 
     @GetMapping(value = "/verify")
-    public boolean verifyUser(@RequestBody UserDtoUsernamePassword user) throws UserNotFoundException {
+    public boolean verifyUser(@RequestBody UserDtoUsernamePassword user) {
         return userService.verifyUser(user);
     }
 
     @PutMapping
-    public UserDtoNoId updateUser(@RequestBody UserDtoNoId userDto) throws UserNotFoundException {
+    public UserDtoNoIdNoPassword updateUser(@RequestBody UserDtoNoIdNoPassword userDto) throws UserNotFoundException {
         return userService.updateUser(userDto);
     }
 
     @PatchMapping
-    public UserDtoNoId updateUserProperty(@RequestBody Map<String, String> propertyValueMap)
+    public UserDtoNoIdNoPassword updateUserProperty(@RequestBody Map<String, String> propertyValueMap)
             throws UserNotFoundException, NoUsernameInMapException {
         return userService.updateUserProperty(propertyValueMap);
     }

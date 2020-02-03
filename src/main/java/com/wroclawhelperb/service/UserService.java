@@ -5,7 +5,7 @@ import com.wroclawhelperb.domain.statistics.PasswordChangeLog;
 import com.wroclawhelperb.domain.statistics.RegistrationLog;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
-import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.UserDtoNoIdNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
@@ -49,32 +49,32 @@ public class UserService {
         this.passwordRepository = passwordRepository;
     }
 
-    public UserDtoNoId getUserByUsername(String username) throws UserNotFoundException {
+    public UserDtoNoIdNoPassword getUserByUsername(String username) throws UserNotFoundException {
         LOGGER.info("Searching for  user with id " + username + "...");
         if (userRepository.findByUserName(username).isPresent()) {
             LOGGER.info("Fetching user with id " + username + "...");
-            return userMapper.mapToUserDtoNoId(userRepository.findByUserName(username).get());
+            return userMapper.mapToUserDtoNoIdNoPassword(userRepository.findByUserName(username).get());
         } else {
             LOGGER.error("There is no user with id " + username);
             throw new UserNotFoundException();
         }
     }
 
-    public UserDtoNoId getUserById(Long id) throws UserNotFoundException {
+    public UserDtoNoIdNoPassword getUserById(Long id) throws UserNotFoundException {
         LOGGER.info("Searching for  user with id " + id + "...");
         if (userRepository.findById(id).isPresent()) {
             LOGGER.info("Fetching user with id " + id + "...");
-            return userMapper.mapToUserDtoNoId(userRepository.findById(id).get());
+            return userMapper.mapToUserDtoNoIdNoPassword(userRepository.findById(id).get());
         } else {
             LOGGER.error("There is no user with id " + id);
             throw new UserNotFoundException();
         }
     }
 
-    public List<UserDtoNoPassword> getAllUsers() {
+    public List<UserDtoNoIdNoPassword> getAllUsers() {
         LOGGER.info("Fetching users from database...");
-        List<UserDtoNoPassword> userDtos = new ArrayList<>();
-        userRepository.findAll().forEach(u -> userDtos.add(userMapper.mapToUserDto(u)));
+        List<UserDtoNoIdNoPassword> userDtos = new ArrayList<>();
+        userRepository.findAll().forEach(u -> userDtos.add(userMapper.mapToUserDtoNoIdNoPassword(u)));
         return userDtos;
     }
 
@@ -85,19 +85,18 @@ public class UserService {
         return user.getId();
     }
 
-    public UserDtoNoId updateUser(UserDtoNoId userDto) throws UserNotFoundException {
+    public UserDtoNoIdNoPassword updateUser(UserDtoNoIdNoPassword userDto) throws UserNotFoundException {
         LOGGER.info("Searching for  user with username " + userDto.getUserName() + " to update...");
         if (userRepository.findByUserName(userDto.getUserName()).isPresent()) {
             User user = userRepository.findByUserName(userDto.getUserName()).get();
             LOGGER.info("User found, updating...");
             user.setFirstName(userDto.getFirstName());
             user.setLastName(userDto.getLastName());
-            user.setPassword(userDto.getPassword());
             user.setEmail(userDto.getEmail());
             user.getLocation().setLatitude(userDto.getLocation().getLatitude());
             user.getLocation().setLongitude(userDto.getLocation().getLongitude());
             user.setSchedulerOn(userDto.isSchedulerOn());
-            return userMapper.mapToUserDtoNoId(userRepository.save(user));
+            return userMapper.mapToUserDtoNoIdNoPassword(userRepository.save(user));
         } else {
             LOGGER.error("There's no user with id " + userDto.getUserName());
             throw new UserNotFoundException();
@@ -123,7 +122,7 @@ public class UserService {
         return attemptResult;
     }
 
-    public UserDtoNoId updateUserProperty(Map<String, String> propertyValueMap)
+    public UserDtoNoIdNoPassword updateUserProperty(Map<String, String> propertyValueMap)
             throws NoUsernameInMapException, UserNotFoundException {
         String username = propertyValueMap.entrySet()
                 .stream()
@@ -155,6 +154,6 @@ public class UserService {
                 user.setSchedulerOn(parseBoolean(e.getValue()));
             }
         }
-        return userMapper.mapToUserDtoNoId(userRepository.save(user));
+        return userMapper.mapToUserDtoNoIdNoPassword(userRepository.save(user));
     }
 }
