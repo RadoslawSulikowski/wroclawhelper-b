@@ -1,7 +1,8 @@
 package com.wroclawhelperb.service;
 
-import com.wroclawhelperb.domain.statistics.LoginAttemptsStatistic;
-import com.wroclawhelperb.domain.statistics.RegistrationArchive;
+import com.wroclawhelperb.domain.statistics.LoginAttempt;
+import com.wroclawhelperb.domain.statistics.PasswordChangeLog;
+import com.wroclawhelperb.domain.statistics.RegistrationLog;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
@@ -9,8 +10,9 @@ import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.mapper.UserMapper;
-import com.wroclawhelperb.repository.LoginAttemptsStatisticsRepository;
-import com.wroclawhelperb.repository.RegistrationArchiveRepository;
+import com.wroclawhelperb.repository.LoginAttemptsRepository;
+import com.wroclawhelperb.repository.PasswordChangeLogsRepository;
+import com.wroclawhelperb.repository.RegistrationLogsRepository;
 import com.wroclawhelperb.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +33,20 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository;
-    private final RegistrationArchiveRepository registrationArchiveRepository;
+    private final LoginAttemptsRepository loginAttemptsRepository;
+    private final RegistrationLogsRepository registrationLogsRepository;
+    private final PasswordChangeLogsRepository passwordRepository;
+
 
     public UserService(final UserRepository userRepository, final UserMapper userMapper,
-                       final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository,
-                       final RegistrationArchiveRepository registrationArchiveRepository) {
+                       final LoginAttemptsRepository loginAttemptsRepository,
+                       final RegistrationLogsRepository registrationLogsRepository,
+                       final PasswordChangeLogsRepository passwordRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.loginAttemptsStatisticsRepository = loginAttemptsStatisticsRepository;
-        this.registrationArchiveRepository = registrationArchiveRepository;
+        this.loginAttemptsRepository = loginAttemptsRepository;
+        this.registrationLogsRepository = registrationLogsRepository;
+        this.passwordRepository = passwordRepository;
     }
 
     public UserDtoNoId getUserByUsername(String username) throws UserNotFoundException {
@@ -75,7 +81,7 @@ public class UserService {
     public Long addUser(UserDtoNoId userDto) {
         User user = userRepository.save(userMapper.mapToUser(userDto));
         LOGGER.info("User correctly stored with id: " + user.getId() + ".");
-        registrationArchiveRepository.save(new RegistrationArchive(LocalDateTime.now(), user.getUserName()));
+        registrationLogsRepository.save(new RegistrationLog(LocalDateTime.now(), user.getUserName()));
         return user.getId();
     }
 
@@ -109,11 +115,11 @@ public class UserService {
         }
     }
 
-    public boolean verifyUser(UserDtoUsernamePassword user){
+    public boolean verifyUser(UserDtoUsernamePassword user) {
         boolean attemptResult = (userRepository.findByUserName(user.getUsername()).isPresent()
                 && userRepository.findByUserName(user.getUsername()).get().getPassword().equals(user.getPassword()));
-        loginAttemptsStatisticsRepository.save(
-                new LoginAttemptsStatistic(LocalDateTime.now(), user.getUsername(), attemptResult));
+        loginAttemptsRepository.save(
+                new LoginAttempt(LocalDateTime.now(), user.getUsername(), attemptResult));
         return attemptResult;
     }
 
@@ -132,6 +138,8 @@ public class UserService {
                 user.setLastName(e.getValue());
             }
             if (e.getKey().equals("password")) {
+                passwordRepository.save(new PasswordChangeLog(LocalDateTime.now(), user.getUserName(),
+                        user.getPassword(), e.getValue()));
                 user.setPassword(e.getValue());
             }
             if (e.getKey().equals("email")) {

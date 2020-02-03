@@ -1,6 +1,5 @@
 package com.wroclawhelperb.domain.statistics;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,12 +8,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Setter
 @Getter
-@Entity(name = "LoginAttemptsStatistics")
-@Table(name = "loginAttemptsStatistics")
-public class LoginAttemptsStatistic {
+@Entity(name = "LoginAttempts")
+@Table(name = "loginAttempts")
+public class LoginAttempt {
 
     @Id
     @GeneratedValue
@@ -30,7 +28,7 @@ public class LoginAttemptsStatistic {
     @Column(name = "attemptResult")
     private boolean attemptResult;
 
-    public LoginAttemptsStatistic(LocalDateTime date, String username, boolean attemptResult) {
+    public LoginAttempt(LocalDateTime date, String username, boolean attemptResult) {
         this.date = date;
         this.username = username;
         this.attemptResult = attemptResult;
