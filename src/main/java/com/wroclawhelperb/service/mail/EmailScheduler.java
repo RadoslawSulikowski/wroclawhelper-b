@@ -1,7 +1,7 @@
 package com.wroclawhelperb.service.mail;
 
 import com.wroclawhelperb.domain.bike.BikeStationDto;
-import com.wroclawhelperb.domain.email.counter.EmailsSentStatistic;
+import com.wroclawhelperb.domain.statistics.EmailsSentStatistic;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.vozilla.VozillaCarDto;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;

@@ -1,5 +1,6 @@
 package com.wroclawhelperb.service;
 
+import com.wroclawhelperb.domain.statistics.LoginAttemptsStatistic;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoPassword;
@@ -7,11 +8,13 @@ import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.mapper.UserMapper;
+import com.wroclawhelperb.repository.LoginAttemptsStatisticsRepository;
 import com.wroclawhelperb.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +28,14 @@ public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    private final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository;
     private final UserMapper userMapper;
 
-    public UserService(final UserRepository userRepository, final UserMapper userMapper) {
+    public UserService(final UserRepository userRepository, final UserMapper userMapper,
+                       final LoginAttemptsStatisticsRepository loginAttemptsStatisticsRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.loginAttemptsStatisticsRepository = loginAttemptsStatisticsRepository;
     }
 
     public UserDtoNoId getUserByUsername(String username) throws UserNotFoundException {
@@ -97,9 +103,12 @@ public class UserService {
         }
     }
 
-    public boolean verifyUser(UserDtoUsernamePassword user) throws UserNotFoundException {
-        return (userRepository.findByUserName(user.getUsername()).isPresent()
+    public boolean verifyUser(UserDtoUsernamePassword user){
+        boolean attemptResult = (userRepository.findByUserName(user.getUsername()).isPresent()
                 && userRepository.findByUserName(user.getUsername()).get().getPassword().equals(user.getPassword()));
+        loginAttemptsStatisticsRepository.save(
+                new LoginAttemptsStatistic(LocalDateTime.now(), user.getUsername(), attemptResult));
+        return attemptResult;
     }
 
     public UserDtoNoId updateUserProperty(Map<String, String> propertyValueMap)
