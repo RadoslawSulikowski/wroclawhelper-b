@@ -101,12 +101,12 @@ class UserControllerTestSuite {
     @Test
     void shouldFetchUserById() throws Exception {
         //Given
-        UserDtoNoPassword user =
-                new UserDtoNoPassword(
-                        1L,
+        UserDtoNoId user =
+                new UserDtoNoId(
                         "fName",
                         "lName",
                         "uName",
+                        "pass",
                         "mail",
                         new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
                         false);
@@ -115,10 +115,10 @@ class UserControllerTestSuite {
         //When & Then
         mockMvc.perform(get("/users/id/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstName", is("fName")))
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))
+                .andExpect(jsonPath("$.password", is("pass")))
                 .andExpect(jsonPath("$.email", is("mail")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))

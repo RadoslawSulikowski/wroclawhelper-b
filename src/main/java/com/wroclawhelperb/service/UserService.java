@@ -43,11 +43,11 @@ public class UserService {
         }
     }
 
-    public UserDtoNoPassword getUserById(Long id) throws UserNotFoundException {
+    public UserDtoNoId getUserById(Long id) throws UserNotFoundException {
         LOGGER.info("Searching for  user with id " + id + "...");
         if (userRepository.findById(id).isPresent()) {
             LOGGER.info("Fetching user with id " + id + "...");
-            return userMapper.mapToUserDto(userRepository.findById(id).get());
+            return userMapper.mapToUserDtoNoId(userRepository.findById(id).get());
         } else {
             LOGGER.error("There is no user with id " + id);
             throw new UserNotFoundException();

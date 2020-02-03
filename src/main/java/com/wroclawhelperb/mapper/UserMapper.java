@@ -10,8 +10,7 @@ public class UserMapper {
 
     public UserDtoNoPassword mapToUserDto(User user) {
         return new UserDtoNoPassword(user.getId(), user.getFirstName(), user.getLastName(), user.getUserName(),
-                user.getEmail(), user.getLocation(), user.isSchedulerOn()
-        );
+                user.getEmail(), user.getLocation(), user.isSchedulerOn());
     }
 
     public UserDtoNoId mapToUserDtoNoId(User user) {
