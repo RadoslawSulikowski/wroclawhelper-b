@@ -5,6 +5,7 @@ import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.weather.WeatherDtoNoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,21 +20,10 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
+@Component
 public class CSVMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVMapper.class);
-    private static CSVMapper csvMapperInstance = null;
-
-    public static CSVMapper getInstance() {
-        if (csvMapperInstance == null) {
-            csvMapperInstance = new CSVMapper();
-        }
-        return csvMapperInstance;
-    }
-
-    private CSVMapper() {
-
-    }
 
     public List<WeatherDtoNoId> mapToWeatherList(URL url) {
         try {
@@ -52,8 +42,7 @@ public class CSVMapper {
                             parseDouble(line[5]),
                             parseDouble(line[6]),
                             line[7],
-                            nameToShortName(line[8])
-                    ));
+                            nameToShortName(line[8])));
                 }
                 lineCounter++;
             }
@@ -85,7 +74,6 @@ public class CSVMapper {
                 String line = scanner.nextLine();
 
                 if (lineCounter > 0) {
-
                     List<Integer> bikeList = new ArrayList<>();
                     String[] lineArr, line0Arr, line1Arr, bikesArr;
 

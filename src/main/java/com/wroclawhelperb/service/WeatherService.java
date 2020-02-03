@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class WeatherService {
 
-    private final CSVMapper csvMapper = CSVMapper.getInstance();
+    private final CSVMapper csvMapper;
     private final WeatherMapper weatherMapper;
     private final UserRepository userRepository;
 
@@ -26,7 +26,8 @@ public class WeatherService {
     @Value("${weather.api.endpoint}")
     private String sourceUrl;
 
-    public WeatherService(WeatherMapper weatherMapper, UserRepository userRepository) {
+    public WeatherService(CSVMapper csvMapper, WeatherMapper weatherMapper, UserRepository userRepository) {
+        this.csvMapper = csvMapper;
         this.weatherMapper = weatherMapper;
         this.userRepository = userRepository;
     }

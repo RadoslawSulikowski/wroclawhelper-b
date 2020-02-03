@@ -2,7 +2,6 @@ package com.wroclawhelperb.controller;
 
 import com.google.gson.Gson;
 import com.wroclawhelperb.domain.location.GPSLocation;
-import com.wroclawhelperb.domain.weather.WeatherStation;
 import com.wroclawhelperb.domain.weather.WeatherStationDto;
 import com.wroclawhelperb.exception.NoStationIdInMapException;
 import com.wroclawhelperb.exception.WeatherStationNotFoundException;
@@ -23,7 +22,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

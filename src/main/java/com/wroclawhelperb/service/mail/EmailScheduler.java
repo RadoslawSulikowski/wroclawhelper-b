@@ -42,7 +42,7 @@ public class EmailScheduler {
         this.statisticsRepository = statisticsRepository;
     }
 
-    @Scheduled(cron = "0 30 19 * * *")
+    @Scheduled(cron = "0 00 07 * * *")
     private void sendEmail() {
         LOGGER.info("Scheduler started...");
         int userCounter = 0;
@@ -61,28 +61,28 @@ public class EmailScheduler {
         statisticsRepository.save(new EmailsSentStatistic(LocalDateTime.now(), userCounter, emailCounter));
     }
 
-    private Mail prepareMail(User user) throws UserNotFoundException {
+    public Mail prepareMail(User user) throws UserNotFoundException {
         WeatherDtoNoId weather = weatherService.getWeatherOnNearestStation(user.getId());
         return new Mail.MailBuilder().sendTo(user.getEmail()).subject(SUBJECT)
-                .messegeLine("\tGood morning, " + user.getFirstName() + "!\n")
-                .messegeLine("Are you wondering what the weather is like outside the window?")
-                .messegeLine("Luckily your scheduler on wroclawhelper is ON!\n")
-                .messegeLine("The nearest Weather Station from location which your set in your profile is on:")
-                .messegeLine(weather.getWeatherStationName() + "\n")
-                .messegeLine("The weather was updated " + weather.getMeasuringTime().toLocalDate() + " "
+                .messageLine("\tGood morning, " + user.getFirstName() + "!\n")
+                .messageLine("Are you wondering what the weather is like outside the window?")
+                .messageLine("Luckily your scheduler on wroclawhelper is ON!\n")
+                .messageLine("The nearest Weather Station from location which your set in your profile is on:")
+                .messageLine(weather.getWeatherStationName() + "\n")
+                .messageLine("The weather was updated " + weather.getMeasuringTime().toLocalDate() + " "
                         + weather.getMeasuringTime().toLocalTime())
-                .messegeLine("Wind:\t\t\t\t\t   " + weather.getWindSpeed() + "m/s " + weather.getStringWindDirection())
-                .messegeLine("Air temperature:\t\t\t" + weather.getAirTemperature() + "\u00B0C")
-                .messegeLine("Ground temperature:\t\t  " + weather.getGroundTemperature() + "\u00B0C")
-                .messegeLine("Precipitation type:\t\t\t" + weather.getEnglishPrecipitationType())
-                .messegeLine("Air humidity:\t\t\t\t  " + weather.getHumidity() + "%\n")
-                .messegeLine(whatToGo(user, weather))
-                .messegeLine("\nHave a nice day!")
-                .messegeLine("\t\tyour woclawhelper!")
+                .messageLine("Wind:\t\t\t\t\t   " + weather.getWindSpeed() + "m/s " + weather.getStringWindDirection())
+                .messageLine("Air temperature:\t\t\t" + weather.getAirTemperature() + "\u00B0C")
+                .messageLine("Ground temperature:\t\t  " + weather.getGroundTemperature() + "\u00B0C")
+                .messageLine("Precipitation type:\t\t\t" + weather.getEnglishPrecipitationType())
+                .messageLine("Air humidity:\t\t\t\t  " + weather.getHumidity() + "%\n")
+                .messageLine(whatToGo(user, weather))
+                .messageLine("\nHave a nice day!")
+                .messageLine("\t\tyour woclawhelper!")
                 .build();
     }
 
-    private String whatToGo(User user, WeatherDtoNoId weather) throws UserNotFoundException {
+    public String whatToGo(User user, WeatherDtoNoId weather) throws UserNotFoundException {
         boolean goByCar = false;
         String msg = "\tToday";
         if (weather.getWindSpeed() >= 8) {

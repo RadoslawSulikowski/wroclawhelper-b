@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/id/{userId}")
-    public UserDtoNoPassword getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
+    public UserDtoNoId getUser(@PathVariable(name = "userId") Long id) throws UserNotFoundException {
         return userService.getUserById(id);
     }
 
