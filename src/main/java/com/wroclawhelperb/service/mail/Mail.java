@@ -26,7 +26,7 @@ public final class Mail {
             return this;
         }
 
-        public MailBuilder messegeLine(String line) {
+        public MailBuilder messageLine(String line) {
             messageLines.add(line);
             return this;
         }
