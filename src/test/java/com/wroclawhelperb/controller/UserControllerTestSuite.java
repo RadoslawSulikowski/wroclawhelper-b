@@ -3,7 +3,7 @@ package com.wroclawhelperb.controller;
 import com.google.gson.Gson;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
-import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.UserDtoNoIdNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
@@ -51,23 +51,21 @@ class UserControllerTestSuite {
     @Test
     void shouldFetchUserList() throws Exception {
         //Given
-        UserDtoNoPassword user1 = new UserDtoNoPassword(
-                1L,
+        UserDtoNoIdNoPassword user1 = new UserDtoNoIdNoPassword(
                 "fName1",
                 "lName1",
                 "uName1",
                 "mail1",
                 new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION),
                 true);
-        UserDtoNoPassword user2 = new UserDtoNoPassword(
-                2L,
+        UserDtoNoIdNoPassword user2 = new UserDtoNoIdNoPassword(
                 "fName2",
                 "lName2",
                 "uName2",
                 "mail2",
                 new GPSLocation(2.0, 2.0, GPSLocation.USER_FAVORITE_LOCATION),
                 false);
-        List<UserDtoNoPassword> users = new ArrayList<>();
+        List<UserDtoNoIdNoPassword> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
         when(service.getAllUsers()).thenReturn(users);
@@ -76,7 +74,6 @@ class UserControllerTestSuite {
         mockMvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].firstName", is("fName1")))
                 .andExpect(jsonPath("$[1].lastName", is("lName2")))
                 .andExpect(jsonPath("$[1].userName", is("uName2")))
@@ -101,12 +98,11 @@ class UserControllerTestSuite {
     @Test
     void shouldFetchUserById() throws Exception {
         //Given
-        UserDtoNoId user =
-                new UserDtoNoId(
+        UserDtoNoIdNoPassword user =
+                new UserDtoNoIdNoPassword(
                         "fName",
                         "lName",
                         "uName",
-                        "pass",
                         "mail",
                         new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
                         false);
@@ -118,7 +114,6 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$.firstName", is("fName")))
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))
-                .andExpect(jsonPath("$.password", is("pass")))
                 .andExpect(jsonPath("$.email", is("mail")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
@@ -140,12 +135,11 @@ class UserControllerTestSuite {
     @Test
     void shouldFetchUserByUsername() throws Exception {
         //Given
-        UserDtoNoId user =
-                new UserDtoNoId(
+        UserDtoNoIdNoPassword user =
+                new UserDtoNoIdNoPassword(
                         "fName",
                         "lName",
                         "uName",
-                        "password",
                         "mail",
                         new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
                         false);
@@ -157,7 +151,6 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$.firstName", is("fName")))
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))
-                .andExpect(jsonPath("$.password", is("password")))
                 .andExpect(jsonPath("$.email", is("mail")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
@@ -192,8 +185,8 @@ class UserControllerTestSuite {
     @Test
     void shouldHandleUserNotFoundExceptionUpdateUser() throws Exception {
         //Given
-        UserDtoNoId userDto = new UserDtoNoId();
-        when(service.updateUser(any(UserDtoNoId.class))).thenThrow(UserNotFoundException.class);
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword();
+        when(service.updateUser(any(UserDtoNoIdNoPassword.class))).thenThrow(UserNotFoundException.class);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
 
@@ -208,15 +201,14 @@ class UserControllerTestSuite {
     @Test
     void shouldUpdateUser() throws Exception {
         //Given
-        UserDtoNoId userDto = new UserDtoNoId(
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword(
                 "fName",
                 "lName",
                 "uName",
-                "pass",
                 "mail",
                 new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
                 true);
-        when(service.updateUser(any(UserDtoNoId.class))).thenReturn(userDto);
+        when(service.updateUser(any(UserDtoNoIdNoPassword.class))).thenReturn(userDto);
 
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
@@ -231,7 +223,6 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))
                 .andExpect(jsonPath("$.email", is("mail")))
-                .andExpect(jsonPath("$.password", is("pass")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
                 .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))
@@ -338,11 +329,10 @@ class UserControllerTestSuite {
     @Test
     void shouldUpdateUserPropertyReturnUpdatedUser() throws Exception {
         //Given
-        UserDtoNoId userDto = new UserDtoNoId(
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword(
                 "fName",
                 "lName",
                 "uName",
-                "pass",
                 "mail",
                 new GPSLocation(2.0, 3.0, GPSLocation.USER_FAVORITE_LOCATION),
                 true);
@@ -363,7 +353,6 @@ class UserControllerTestSuite {
                 .andExpect(jsonPath("$.lastName", is("lName")))
                 .andExpect(jsonPath("$.userName", is("uName")))
                 .andExpect(jsonPath("$.email", is("mail")))
-                .andExpect(jsonPath("$.password", is("pass")))
                 .andExpect(jsonPath("$.location.latitude", is(2.0)))
                 .andExpect(jsonPath("$.location.longitude", is(3.0)))
                 .andExpect(jsonPath("$.location.locationType", is(GPSLocation.USER_FAVORITE_LOCATION)))

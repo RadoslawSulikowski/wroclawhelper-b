@@ -6,7 +6,7 @@ import ch.qos.logback.core.read.ListAppender;
 import com.wroclawhelperb.domain.location.GPSLocation;
 import com.wroclawhelperb.domain.user.User;
 import com.wroclawhelperb.domain.user.UserDtoNoId;
-import com.wroclawhelperb.domain.user.UserDtoNoPassword;
+import com.wroclawhelperb.domain.user.UserDtoNoIdNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
 import com.wroclawhelperb.exception.UserNotFoundException;
@@ -47,14 +47,14 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "TestLastName", "TestUserName",
                 "TestPassword", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "TestLastName", "TestUserName",
-                "TestPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "TestLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
         when(repository.findByUserName(anyString())).thenReturn(Optional.of(user));
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUserDto = service.getUserByUsername(anyString());
+        UserDtoNoIdNoPassword returnedUserDto = service.getUserByUsername(anyString());
 
         //Then
         assertEquals(userDto, returnedUserDto);
@@ -75,14 +75,14 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "TestLastName", "TestUserName",
                 "TestPassword", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "TestLastName", "TestUserName",
-                "TestPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "TestLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
         when(repository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUserDto = service.getUserById(anyLong());
+        UserDtoNoIdNoPassword returnedUserDto = service.getUserById(anyLong());
 
         //Then
         assertEquals(userDto, returnedUserDto);
@@ -98,7 +98,7 @@ class UserServiceTestSuite {
     }
 
     @Test
-    void testVerifyUserShouldReturnTrue() throws UserNotFoundException {
+    void testVerifyUserShouldReturnTrue() {
         //Given
         GPSLocation location = new GPSLocation(1.0, 1.5, USER_FAVORITE_LOCATION);
         location.setId(12L);
@@ -117,7 +117,7 @@ class UserServiceTestSuite {
     }
 
     @Test
-    void testVerifyUserShouldReturnFalse() throws UserNotFoundException {
+    void testVerifyUserShouldReturnFalse() {
         //Given
         GPSLocation location = new GPSLocation(1.0, 1.5, USER_FAVORITE_LOCATION);
         location.setId(12L);
@@ -167,18 +167,18 @@ class UserServiceTestSuite {
         User user = new User("updatedFirstName", "TestLastName", "TestUserName",
                 "TestPassword", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("updatedFirstName", "TestLastName", "TestUserName",
-                "TestPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("updatedFirstName", "TestLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
         Map<String, String> map = new HashMap<>();
         map.put("username", "TestUserName");
         map.put("firstName", "updatedFirstName");
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUserProperty(map);
+        UserDtoNoIdNoPassword returnedUser = service.updateUserProperty(map);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -193,18 +193,18 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "updatedLastName", "TestUserName",
                 "TestPassword", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "updatedLastName", "TestUserName",
-                "TestPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "updatedLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
         Map<String, String> map = new HashMap<>();
         map.put("username", "TestUserName");
         map.put("lastName", "updatedLastName");
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUserProperty(map);
+        UserDtoNoIdNoPassword returnedUser = service.updateUserProperty(map);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -219,18 +219,18 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "TestLastName", "TestUserName",
                 "updatedPassword", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "TestLastName", "TestUserName",
-                "updatedPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "TestLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
         Map<String, String> map = new HashMap<>();
         map.put("username", "TestUserName");
         map.put("password", "updatedPassword");
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUserProperty(map);
+        UserDtoNoIdNoPassword returnedUser = service.updateUserProperty(map);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -245,18 +245,18 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "TestLastName", "TestUserName",
                 "TestPassword", "updatedEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "TestLastName", "TestUserName",
-                "TestPassword", "updatedEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "TestLastName",
+                "TestUserName", "updatedEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), true);
         Map<String, String> map = new HashMap<>();
         map.put("username", "TestUserName");
         map.put("email", "updatedEmail");
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUserProperty(map);
+        UserDtoNoIdNoPassword returnedUser = service.updateUserProperty(map);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -271,18 +271,18 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "TestLastName", "TestUserName",
                 "TestPassword", "TestEmail",
                 new GPSLocation(50.0001, 16.973045, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "TestLastName", "TestUserName",
-                "TestPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "TestLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(50.0001, 16.973045, USER_FAVORITE_LOCATION), true);
         Map<String, String> map = new HashMap<>();
         map.put("username", "TestUserName");
         map.put("latitude", "50.0001");
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUserProperty(map);
+        UserDtoNoIdNoPassword returnedUser = service.updateUserProperty(map);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -297,18 +297,18 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "TestLastName", "TestUserName",
                 "TestPassword", "TestEmail",
                 new GPSLocation(51.138235, 17.0001, USER_FAVORITE_LOCATION), true);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "TestLastName", "TestUserName",
-                "TestPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "TestLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(51.138235, 17.0001, USER_FAVORITE_LOCATION), true);
         Map<String, String> map = new HashMap<>();
         map.put("username", "TestUserName");
         map.put("longitude", "17.0001");
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUserProperty(map);
+        UserDtoNoIdNoPassword returnedUser = service.updateUserProperty(map);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -323,18 +323,18 @@ class UserServiceTestSuite {
         User user = new User("TestFirstName", "TestLastName", "TestUserName",
                 "TestPassword", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), false);
-        UserDtoNoId userDto = new UserDtoNoId("TestFirstName", "TestLastName", "TestUserName",
-                "TestPassword", "TestEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("TestFirstName", "TestLastName",
+                "TestUserName", "TestEmail",
                 new GPSLocation(51.138235, 16.973045, USER_FAVORITE_LOCATION), false);
         Map<String, String> map = new HashMap<>();
         map.put("username", "TestUserName");
         map.put("schedulerOn", "false");
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUserProperty(map);
+        UserDtoNoIdNoPassword returnedUser = service.updateUserProperty(map);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -346,7 +346,7 @@ class UserServiceTestSuite {
         when(repository.findByUserName(anyString())).thenReturn(Optional.empty());
 
         //When & Then
-        assertThrows(UserNotFoundException.class, () -> service.updateUser(new UserDtoNoId()));
+        assertThrows(UserNotFoundException.class, () -> service.updateUser(new UserDtoNoIdNoPassword()));
     }
 
     @Test
@@ -359,15 +359,15 @@ class UserServiceTestSuite {
         User user = new User("UpdatedFirstName", "UpdatedLastName", "TestUserName",
                 "UpdatedPassword", "UpdatedEmail",
                 new GPSLocation(51.00005, 16.000045, USER_FAVORITE_LOCATION), false);
-        UserDtoNoId userDto = new UserDtoNoId("UpdatedFirstName", "UpdatedLastName", "TestUserName",
-                "UpdatedPassword", "UpdatedEmail",
+        UserDtoNoIdNoPassword userDto = new UserDtoNoIdNoPassword("UpdatedFirstName",
+                "UpdatedLastName", "TestUserName", "UpdatedEmail",
                 new GPSLocation(51.00005, 16.000045, USER_FAVORITE_LOCATION), false);
         when(repository.findByUserName("TestUserName")).thenReturn(Optional.of(userToUpdate));
         when(repository.save(userToUpdate)).thenReturn(user);
-        when(mapper.mapToUserDtoNoId(user)).thenReturn(userDto);
+        when(mapper.mapToUserDtoNoIdNoPassword(user)).thenReturn(userDto);
 
         //When
-        UserDtoNoId returnedUser = service.updateUser(userDto);
+        UserDtoNoIdNoPassword returnedUser = service.updateUser(userDto);
 
         //Then
         assertEquals(userDto, returnedUser);
@@ -432,7 +432,7 @@ class UserServiceTestSuite {
         when(repository.findAll()).thenReturn(emptyList());
 
         //When
-        List<UserDtoNoPassword> fetchedList = service.getAllUsers();
+        List<UserDtoNoIdNoPassword> fetchedList = service.getAllUsers();
 
         //Then
         assertEquals(0, fetchedList.size());
@@ -453,24 +453,24 @@ class UserServiceTestSuite {
                 "mail2", new GPSLocation(2.0, 2.0, GPSLocation.USER_FAVORITE_LOCATION),
                 false);
         user2.setId(2L);
-        UserDtoNoPassword userDto1 = new UserDtoNoPassword(1L, "fName1", "lName1", "uName1",
+        UserDtoNoIdNoPassword userDto1 = new UserDtoNoIdNoPassword("fName1", "lName1", "uName1",
                 "mail1", new GPSLocation(1.0, 1.0, GPSLocation.USER_FAVORITE_LOCATION),
                 true);
-        UserDtoNoPassword userDto2 = new UserDtoNoPassword(2L, "fName2", "lName2", "uName2",
+        UserDtoNoIdNoPassword userDto2 = new UserDtoNoIdNoPassword("fName2", "lName2", "uName2",
                 "mail2", new GPSLocation(2.0, 2.0, GPSLocation.USER_FAVORITE_LOCATION),
                 false);
         List<User> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
-        List<UserDtoNoPassword> userDtos = new ArrayList<>();
+        List<UserDtoNoIdNoPassword> userDtos = new ArrayList<>();
         userDtos.add(userDto1);
         userDtos.add(userDto2);
-        when(mapper.mapToUserDto(user1)).thenReturn(userDto1);
-        when(mapper.mapToUserDto(user2)).thenReturn(userDto2);
+        when(mapper.mapToUserDtoNoIdNoPassword(user1)).thenReturn(userDto1);
+        when(mapper.mapToUserDtoNoIdNoPassword(user2)).thenReturn(userDto2);
         when(repository.findAll()).thenReturn(users);
 
         //When
-        List<UserDtoNoPassword> fetchedList = service.getAllUsers();
+        List<UserDtoNoIdNoPassword> fetchedList = service.getAllUsers();
 
         //Then
         assertEquals(userDtos, fetchedList);
