@@ -8,6 +8,7 @@ import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoIdNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
+import com.wroclawhelperb.exception.UserAlreadyExistException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.mapper.UserMapper;
 import com.wroclawhelperb.repository.LoginAttemptsRepository;
@@ -78,11 +79,15 @@ public class UserService {
         return userDtos;
     }
 
-    public Long addUser(UserDtoNoId userDto) {
-        User user = userRepository.save(userMapper.mapToUser(userDto));
-        LOGGER.info("User correctly stored with id: " + user.getId() + ".");
-        registrationLogsRepository.save(new RegistrationLog(LocalDateTime.now(), user.getUserName()));
-        return user.getId();
+    public Long addUser(UserDtoNoId userDto) throws UserAlreadyExistException {
+        if (isUsernameUnique(userDto.getUserName())) {
+            User user = userRepository.save(userMapper.mapToUser(userDto));
+            LOGGER.info("User correctly stored with id: " + user.getId() + ".");
+            registrationLogsRepository.save(new RegistrationLog(LocalDateTime.now(), user.getUserName()));
+            return user.getId();
+        }
+        LOGGER.info("User with username" + userDto.getUserName() + "already exists!");
+        throw new UserAlreadyExistException();
     }
 
     public UserDtoNoIdNoPassword updateUser(UserDtoNoIdNoPassword userDto) throws UserNotFoundException {
@@ -155,5 +160,9 @@ public class UserService {
             }
         }
         return userMapper.mapToUserDtoNoIdNoPassword(userRepository.save(user));
+    }
+
+    public boolean isUsernameUnique(String username) {
+        return !(userRepository.findByUserName(username).isPresent());
     }
 }

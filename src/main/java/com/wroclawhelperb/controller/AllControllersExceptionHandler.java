@@ -55,4 +55,11 @@ public class AllControllersExceptionHandler {
         LOGGER.error("Station short name not found in received data");
         return "Station short name not found in received data";
     }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Username already exists!")
+    public String userAlreadyExistExceptionHandler() {
+        LOGGER.error("Username already exists!");
+        return "Username already exists!";
+    }
 }

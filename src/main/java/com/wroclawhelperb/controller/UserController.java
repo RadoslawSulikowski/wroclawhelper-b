@@ -4,6 +4,7 @@ import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoIdNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
+import com.wroclawhelperb.exception.UserAlreadyExistException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED, reason = "User successful added")
-    public Long addUser(@RequestBody UserDtoNoId userDto) {
-        return userService.addUser(userDto);
+    public void addUser(@RequestBody UserDtoNoId userDto) throws UserAlreadyExistException {
+        userService.addUser(userDto);
     }
 
     @GetMapping
@@ -46,6 +47,11 @@ public class UserController {
     @GetMapping(value = "/verify")
     public boolean verifyUser(@RequestBody UserDtoUsernamePassword user) {
         return userService.verifyUser(user);
+    }
+
+    @GetMapping(value = "/verify/{username}")
+    public boolean isUsernameUnique(@PathVariable(name = "username") String username) {
+        return userService.isUsernameUnique(username);
     }
 
     @PutMapping

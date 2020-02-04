@@ -9,6 +9,7 @@ import com.wroclawhelperb.domain.user.UserDtoNoId;
 import com.wroclawhelperb.domain.user.UserDtoNoIdNoPassword;
 import com.wroclawhelperb.domain.user.UserDtoUsernamePassword;
 import com.wroclawhelperb.exception.NoUsernameInMapException;
+import com.wroclawhelperb.exception.UserAlreadyExistException;
 import com.wroclawhelperb.exception.UserNotFoundException;
 import com.wroclawhelperb.mapper.UserMapper;
 import com.wroclawhelperb.repository.UserRepository;
@@ -406,7 +407,7 @@ class UserServiceTestSuite {
     }
 
     @Test
-    void shouldAddUserReturnSavedUserId() {
+    void shouldAddUserReturnSavedUserId() throws UserAlreadyExistException {
         //Given
         List<ILoggingEvent> logsList = prepareLogList();
         User userToSave = new User();
